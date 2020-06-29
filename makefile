@@ -1,9 +1,9 @@
 test: main.o
-	g++ main.o -o test
+	g++ -std=c++17 main.o -o test -lstdc++
 	rm *.o
 
 main.o: main.cpp
-	g++ -c main.cpp 
+	g++ -std=c++17 -c main.cpp 
 
 all: test ;
 

@@ -5,6 +5,21 @@
 #include <cerrno>
 #include <filesystem>
 
+/****************************************************************************
+ * TODO: Two modes - automatic and manual
+ *								 - automatic keeps checking for new changes
+ *								 - manual means the programme is called once in a while
+ *									 to clean up the directory
+ * TODO: Custom groups - allows user to define a custom folder with a mix of
+ *											 extensions (e.g. .cpp, .py for coding)
+ * TODO: Check for screenshots on mac and separate that from the other .png
+ * TODO: A simple interface - must also allow users to rename dir grouping
+ *														to something different
+ *													- and ask user if want to keep updating that dir or
+ *														add new files to a diff default grouping
+ * TODO: Maybe also allow recursive option - but probably not
+ ****************************************************************************/
+
 namespace fs = std::filesystem;
 
 /* for now, sort by file extension */

@@ -10,6 +10,8 @@
  *								 - automatic keeps checking for new changes
  *								 - manual means the programme is called once in a while
  *									 to clean up the directory
+ * TODO: Undo cleanup - store save data as a txt file maybe (and then undo
+ *											based on the txt file)
  * TODO: Custom groups - allows user to define a custom folder with a mix of
  *											 extensions (e.g. .cpp, .py for coding)
  * TODO: Check for screenshots on mac and separate that from the other .png
@@ -18,6 +20,14 @@
  *													- and ask user if want to keep updating that dir or
  *														add new files to a diff default grouping
  * TODO: Maybe also allow recursive option - but probably not
+ ****************************************************************************/
+
+
+/****************************************************************************
+ * 1. modularise functions and files
+ * 2. implement the actual create dir and move functions
+ *		keep track if a dir has already been created or not for efficiency
+ * 3. implement and test the actual cleaning up 
  ****************************************************************************/
 
 namespace fs = std::filesystem;
@@ -44,8 +54,11 @@ int main() {
 				std::cout << "text files!\n";
 			} else if (currExt == ".md") {
 				std::cout << "markdown\n";
+			} else if (currExt == ".pdf") {
+				std::cout << "pdf\n";
 			} else {
 				std::cout << "others\n";
+			}
 		}
 	}
 	/* perhaps try to check if dir exists first */

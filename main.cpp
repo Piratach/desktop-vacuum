@@ -4,6 +4,7 @@
 #include <string>
 #include <cerrno>
 #include <filesystem>
+#include <fstream>
 
 /****************************************************************************
  * TODO: Two modes - automatic and manual
@@ -11,6 +12,7 @@
  *								 - manual means the programme is called once in a while
  *									 to clean up the directory
  * TODO: Include an "ignore" list
+ * TODO: Support for mp3, mp4 etc.
  * TODO: Undo cleanup - store save data as a txt file maybe (and then undo
  *											based on the txt file)
  * TODO: Custom groups - allows user to define a custom folder with a mix of
@@ -33,7 +35,12 @@
 
 namespace fs = std::filesystem;
 
-void move(std::string oldName, std::string targetDir) {
+void writeChanges(std::ofstream& txtFile, std::string targetDir,
+		std::string oldName, std::string newName) {
+	txtFile << targetDir << ' ' << oldName << ' ' << newName << '\n';
+}
+
+void move(std::string oldName, std::string targetDir, std::ofstream& txtFile) {
 	// targetDir taken from extension
 	std::string newName = targetDir + "/" + oldName;
 	// check with a tag to avoid computation
@@ -44,11 +51,14 @@ void move(std::string oldName, std::string targetDir) {
 		std::rename(oldName.c_str(), newName.c_str());
 		// set tag to true
 	}
+	writeChanges(txtFile, targetDir, oldName, newName);
 }
 
 /* for now, sort by file extension */
 int main() {
 	std::string dirPath = fs::current_path();
+	std::ofstream txtFile;
+	txtFile.open(".saveState.txt", std::ofstream::trunc);
 	for(auto& p: fs::directory_iterator(dirPath)) {
 		fs::path currPath = p.path();
 		std::string currFile = currPath.filename();
@@ -62,15 +72,15 @@ int main() {
 			if (currExt == ".jpg" || currExt == ".jpeg") {
 				// hash extension to target directory name...
 				// for now, hardcode it as jpg etc.
-				move(currFile, "jpg");
+				move(currFile, "jpg", txtFile);
 			} else if (currExt == ".png") {
-				move(currFile, "png");
+				move(currFile, "png", txtFile);
 			} else if (currExt == ".txt") {
-				move(currFile, "txt");
+				move(currFile, "txt", txtFile);
 			} else if (currExt == ".md") {
-				move(currFile, "md");
+				move(currFile, "md", txtFile);
 			} else if (currExt == ".pdf") {
-				move(currFile, "pdf");
+				move(currFile, "pdf", txtFile);
 			} else {
 				// give user option to do nothing or move to others
 				// move(currFile, "others");
@@ -78,5 +88,6 @@ int main() {
 			}
 		}
 	}
+	txtFile.close();
   return 0;
 }

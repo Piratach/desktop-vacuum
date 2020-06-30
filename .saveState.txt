@@ -1,0 +1,4 @@
+jpg test2.jpg jpg/test2.jpg
+md README.md md/README.md
+png test.png png/test.png
+txt text.txt txt/text.txt

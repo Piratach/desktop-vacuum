@@ -7,14 +7,13 @@
 #include <fstream>
 
 /****************************************************************************
+ * TODO: Flag to check if revert has already been used.
  * TODO: Two modes - automatic and manual
  *								 - automatic keeps checking for new changes
  *								 - manual means the programme is called once in a while
  *									 to clean up the directory
  * TODO: Include an "ignore" list
  * TODO: Support for mp3, mp4 etc.
- * TODO: Undo cleanup - store save data as a txt file maybe (and then undo
- *											based on the txt file)
  * TODO: Custom groups - allows user to define a custom folder with a mix of
  *											 extensions (e.g. .cpp, .py for coding)
  * TODO: Check for screenshots on mac and separate that from the other .png
@@ -37,7 +36,9 @@ namespace fs = std::filesystem;
 
 void writeChanges(std::ofstream& txtFile, std::string targetDir,
 		std::string oldName, std::string newName) {
-	txtFile << targetDir << ' ' << oldName << ' ' << newName << '\n';
+	txtFile << targetDir << '\n'; 
+	txtFile << oldName << '\n';
+	txtFile << newName << '\n';
 }
 
 void move(std::string oldName, std::string targetDir, std::ofstream& txtFile) {

@@ -40,7 +40,9 @@ int main() {
 	std::ifstream txtFile;
 	txtFile.open(".saveState.txt");
 	std::string dir, oldName, newName;
-	while (txtFile >> dir >> oldName >> newName){
+	while (std::getline(txtFile, dir)) {
+		std::getline(txtFile, oldName);
+		std::getline(txtFile, newName);
 		std::rename(newName.c_str(), oldName.c_str());
 		if (fs::is_empty(dir)) {
 			fs::remove(dir.c_str());

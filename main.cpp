@@ -5,9 +5,10 @@
 #include <cerrno>
 #include <filesystem>
 #include <fstream>
+#include <map>
 
 /****************************************************************************
- * TODO: Flag to check if revert has already been used.
+ * TODO: Flag to check if revert has already been used. 
  * TODO: Two modes - automatic and manual
  *								 - automatic keeps checking for new changes
  *								 - automatic does NOT run the manual once
@@ -19,6 +20,8 @@
  *													 audio (.mid, .mp3, .wav etc.)
  * TODO: Custom groups - allows user to define a custom folder with a mix of
  *											 extensions (e.g. .cpp, .py for coding)
+ *										 - use a dictionary, and new files are mapped to a 
+ *											 certain group
  * TODO: A simple interface - must also allow users to rename dir grouping
  *														to something different
  *													- and ask user if want to keep updating that dir or
@@ -28,13 +31,23 @@
 
 
 /****************************************************************************
- * 0. hash extensions to grouping
+ * 0. hash extensions to grouping [OK]
+ * 0.1. store and load dict efficiently...
  * 1. modularise functions and files [OK]
  * 2. keep track if a dir has already been created or not for efficiency
  * 3. interface
  ****************************************************************************/
 
 namespace fs = std::filesystem;
+
+// not sure if this is the best method possible
+// TIL c++ dict does not support definition of default values...
+struct DefaultString
+{
+	DefaultString() : value("others") {}
+	DefaultString(std::string s) : value(s) {}
+	std::string value;
+};
 
 void writeChanges(std::ofstream& txtFile, std::string targetDir,
 		std::string oldName, std::string newName) {
@@ -59,6 +72,21 @@ void move(std::string oldName, std::string targetDir, std::ofstream& txtFile) {
 
 /* for now, sort by file extension */
 int main() {
+
+	// initialising dict - temporary
+	// will load it from some kind of storage (maybe .txt)
+	std::map<std::string, DefaultString> groupings;
+	groupings[".jpg"] = DefaultString("jpg");
+	groupings[".jpeg"] = DefaultString("jpg");
+	groupings[".png"] = DefaultString("png");
+	groupings[".pdf"] = DefaultString("pdf");
+	groupings[".txt"] = DefaultString("txt");
+	// groupings.insert(std::pair<std::string, std::string>(".jpg", "jpg"));
+	// groupings.insert(std::pair<std::string, std::string>(".jpeg", "jpg"));
+	// groupings.insert(std::pair<std::string, std::string>(".png", "png"));
+	// groupings.insert(std::pair<std::string, std::string>(".pdf", "pdf"));
+	// groupings.insert(std::pair<std::string, std::string>(".txt", "txt"));
+
 	std::string dirPath = fs::current_path();
 	std::ofstream txtFile;
 	txtFile.open(".saveState.txt", std::ofstream::trunc);
@@ -67,28 +95,14 @@ int main() {
 		std::string currFile = currPath.filename();
 		if (currFile[0] == '.' || fs::is_directory(currPath)) { 
 			// ignore hidden files and directories
-			// we don't want to mess with those - it's already clean
+			// we don't want to mess with those - they're already clean
 			continue;
 		} else {
-			std::string currExt = currPath.extension();
+			// std::string currExt = currPath.extension();
 			// TIL c++ does not support str switch statements...
-			if (currExt == ".jpg" || currExt == ".jpeg") {
-				// hash extension to target directory name...
-				// for now, hardcode it as jpg etc.
-				move(currFile, "jpg", txtFile);
-			} else if (currExt == ".png") {
-				move(currFile, "png", txtFile);
-			} else if (currExt == ".txt") {
-				move(currFile, "txt", txtFile);
-			} else if (currExt == ".md") {
-				move(currFile, "md", txtFile);
-			} else if (currExt == ".pdf") {
-				move(currFile, "pdf", txtFile);
-			} else {
-				// give user option to do nothing or move to others
-				// move(currFile, "others");
-				continue;
-			}
+			std::string targetDir = groupings[currPath.extension()].value;
+			if (targetDir == "others") continue; // let user decide what to do...
+			move(currFile, targetDir, txtFile);
 		}
 	}
 	txtFile.close();

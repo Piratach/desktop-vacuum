@@ -32,6 +32,19 @@
 
 namespace fs = std::filesystem;
 
+void move(std::string oldName, std::string targetDir) {
+	// targetDir taken from extension
+	std::string newName = targetDir + "/" + oldName;
+	// check with a tag to avoid computation
+	if (fs::exists(targetDir)) {
+		std::rename(oldName.c_str(), newName.c_str());
+	} else {
+		fs::create_directory(targetDir);
+		std::rename(oldName.c_str(), newName.c_str());
+		// set tag to true
+	}
+}
+
 /* for now, sort by file extension */
 int main() {
 	std::string dirPath = fs::current_path();
@@ -42,8 +55,7 @@ int main() {
 			// ignore hidden files and directories
 			// we don't want to mess with those - it's already clean
 			continue;
-		}
-		else {
+		} else {
 			std::string currExt = currPath.extension();
 			// TIL c++ does not support str switch statements...
 			if (currExt == ".jpg" || currExt == ".jpeg") {
@@ -61,16 +73,5 @@ int main() {
 			}
 		}
 	}
-	/* perhaps try to check if dir exists first */
-  // if(std::rename("test.png", "new/changed.png") < 0) {
-		// std::string error = strerror(errno);
-		// std::string dirError = "No such file or directory";
-		// if (error.compare(dirError) == 0) {
-			/* Make a new directory */
-			// fs::create_directory("new");
-			// system("mkdir new"); // system call to create new dir
-			// std::rename("test.png", "new/changed.png");
-		// }
-	// }
   return 0;
 }

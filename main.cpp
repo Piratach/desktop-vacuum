@@ -10,6 +10,7 @@
  *								 - automatic keeps checking for new changes
  *								 - manual means the programme is called once in a while
  *									 to clean up the directory
+ * TODO: Include an "ignore" list
  * TODO: Undo cleanup - store save data as a txt file maybe (and then undo
  *											based on the txt file)
  * TODO: Custom groups - allows user to define a custom folder with a mix of
@@ -59,17 +60,21 @@ int main() {
 			std::string currExt = currPath.extension();
 			// TIL c++ does not support str switch statements...
 			if (currExt == ".jpg" || currExt == ".jpeg") {
-				std::cout << "jpeg!\n";
+				// hash extension to target directory name...
+				// for now, hardcode it as jpg etc.
+				move(currFile, "jpg");
 			} else if (currExt == ".png") {
-				std::cout << "png!\n";
+				move(currFile, "png");
 			} else if (currExt == ".txt") {
-				std::cout << "text files!\n";
+				move(currFile, "txt");
 			} else if (currExt == ".md") {
-				std::cout << "markdown\n";
+				move(currFile, "md");
 			} else if (currExt == ".pdf") {
-				std::cout << "pdf\n";
+				move(currFile, "pdf");
 			} else {
-				std::cout << "others\n";
+				// give user option to do nothing or move to others
+				// move(currFile, "others");
+				continue;
 			}
 		}
 	}

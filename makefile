@@ -8,4 +8,4 @@ main.o: main.cpp
 all: test ;
 
 clean:
-	rm -rf main main.o
+	rm -rf test main.o

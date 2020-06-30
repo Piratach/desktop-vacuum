@@ -10,13 +10,15 @@
  * TODO: Flag to check if revert has already been used.
  * TODO: Two modes - automatic and manual
  *								 - automatic keeps checking for new changes
+ *								 - automatic does NOT run the manual once
  *								 - manual means the programme is called once in a while
- *									 to clean up the directory
+ *									 to clean up the directory [DONE]
  * TODO: Include an "ignore" list
- * TODO: Support for mp3, mp4 etc.
+ * TODO: Check for screenshots on mac and separate that from the other .png
+ * TODO: Default groupings - screenshots, images, videos (.mp4, .mov), 
+ *													 audio (.mid, .mp3, .wav etc.)
  * TODO: Custom groups - allows user to define a custom folder with a mix of
  *											 extensions (e.g. .cpp, .py for coding)
- * TODO: Check for screenshots on mac and separate that from the other .png
  * TODO: A simple interface - must also allow users to rename dir grouping
  *														to something different
  *													- and ask user if want to keep updating that dir or
@@ -26,10 +28,10 @@
 
 
 /****************************************************************************
- * 1. modularise functions and files
- * 2. implement the actual create dir and move functions
- *		keep track if a dir has already been created or not for efficiency
- * 3. implement and test the actual cleaning up 
+ * 0. hash extensions to grouping
+ * 1. modularise functions and files [OK]
+ * 2. keep track if a dir has already been created or not for efficiency
+ * 3. interface
  ****************************************************************************/
 
 namespace fs = std::filesystem;

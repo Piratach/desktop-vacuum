@@ -1,0 +1,5 @@
+.jpg jpg
+.jpeg jpg
+.png png
+.pdf pdf
+.txt txt

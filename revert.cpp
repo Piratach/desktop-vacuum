@@ -38,7 +38,7 @@ namespace fs = std::filesystem;
 int main() {
 	std::string dirPath = fs::current_path();
 	std::ifstream txtFile;
-	txtFile.open(".saveState.txt");
+	txtFile.open(".save.txt");
 	std::string dir, oldName, newName;
 	while (std::getline(txtFile, dir)) {
 		std::getline(txtFile, oldName);

@@ -31,6 +31,7 @@
 
 
 /****************************************************************************
+ * -1. BUG FIX!!! Screen Shot 2563.. in desktop is not working...
  * 0. hash extensions to grouping [OK]
  * 0.1. store and load dict efficiently...
  * 1. modularise functions and files [OK]
@@ -48,6 +49,19 @@ struct DefaultString
 	DefaultString(std::string s) : value(s) {}
 	std::string value;
 };
+
+// getting extension while ignoring trailing whitespace
+static inline std::string extension(std::string s) {
+	int len = 0;
+	for (int i = s.size() - 1; i >= 0; i--) {
+		if (std::isspace(s[i])) continue;
+		else if (s[i] == '.') {
+			return s.substr(i, len+1);
+		}
+		len++;
+	}
+	return "";
+}
 
 void writeChanges(std::ofstream& txtFile, std::string targetDir,
 		std::string oldName, std::string newName) {
@@ -73,38 +87,34 @@ void move(std::string oldName, std::string targetDir, std::ofstream& txtFile) {
 /* for now, sort by file extension */
 int main() {
 
-	// initialising dict - temporary
-	// will load it from some kind of storage (maybe .txt)
+	// initialising dict - loading from a .txt file
 	std::map<std::string, DefaultString> groupings;
-	groupings[".jpg"] = DefaultString("jpg");
-	groupings[".jpeg"] = DefaultString("jpg");
-	groupings[".png"] = DefaultString("png");
-	groupings[".pdf"] = DefaultString("pdf");
-	groupings[".txt"] = DefaultString("txt");
-	// groupings.insert(std::pair<std::string, std::string>(".jpg", "jpg"));
-	// groupings.insert(std::pair<std::string, std::string>(".jpeg", "jpg"));
-	// groupings.insert(std::pair<std::string, std::string>(".png", "png"));
-	// groupings.insert(std::pair<std::string, std::string>(".pdf", "pdf"));
-	// groupings.insert(std::pair<std::string, std::string>(".txt", "txt"));
+	std::ifstream mapFile;
+	mapFile.open(".map.txt");
+	std::string key, val;
+	while (mapFile >> key >> val) {
+		groupings[key] = DefaultString(val);
+	}
 
 	std::string dirPath = fs::current_path();
-	std::ofstream txtFile;
-	txtFile.open(".saveState.txt", std::ofstream::trunc);
+	std::ofstream saveFile;
+	saveFile.open(".save.txt", std::ofstream::trunc);
 	for(auto& p: fs::directory_iterator(dirPath)) {
 		fs::path currPath = p.path();
 		std::string currFile = currPath.filename();
-		if (currFile[0] == '.' || fs::is_directory(currPath)) { 
+		if (currFile[0] == '.' || fs::is_directory(currPath)) {
+			// std::cout << currFile << std::endl;
 			// ignore hidden files and directories
 			// we don't want to mess with those - they're already clean
 			continue;
 		} else {
 			// std::string currExt = currPath.extension();
 			// TIL c++ does not support str switch statements...
-			std::string targetDir = groupings[currPath.extension()].value;
+			std::string targetDir = groupings[extension(currPath)].value;
 			if (targetDir == "others") continue; // let user decide what to do...
-			move(currFile, targetDir, txtFile);
+			move(currFile, targetDir, saveFile);
 		}
 	}
-	txtFile.close();
+	saveFile.close();
   return 0;
 }

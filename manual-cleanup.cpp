@@ -1,12 +1,4 @@
-#include <iostream>
-#include <cstdio>
-#include <cstring>
-#include <string>
-#include <cerrno>
-#include <filesystem>
-#include <fstream>
-#include <map>
-
+#include "cleanup-tools.hpp"
 /****************************************************************************
  * TODO: Flag to check if revert has already been used. 
  * TODO: Two modes - automatic and manual
@@ -41,61 +33,12 @@
 
 namespace fs = std::filesystem;
 
-// not sure if this is the best method possible
-// TIL c++ dict does not support definition of default values...
-struct DefaultString
-{
-	DefaultString() : value("others") {}
-	DefaultString(std::string s) : value(s) {}
-	std::string value;
-};
-
-// getting extension while ignoring trailing whitespace
-static inline std::string extension(std::string s) {
-	int len = 0;
-	for (int i = s.size() - 1; i >= 0; i--) {
-		if (std::isspace(s[i])) continue;
-		else if (s[i] == '.') {
-			return s.substr(i, len+1);
-		}
-		len++;
-	}
-	return "";
-}
-
-static inline void writeChanges(std::ofstream& txtFile,
-		const std::string &targetDir, const std::string &oldName,
-		const std::string &newName) {
-	txtFile << targetDir << '\n'; 
-	txtFile << oldName << '\n';
-	txtFile << newName << '\n';
-}
-
-void move(std::string oldName, std::string targetDir, std::ofstream& txtFile) {
-	// targetDir taken from extension
-	std::string newName = targetDir + "/" + oldName;
-	// check with a tag to avoid computation
-	if (fs::exists(targetDir)) {
-		std::rename(oldName.c_str(), newName.c_str());
-	} else {
-		fs::create_directory(targetDir);
-		std::rename(oldName.c_str(), newName.c_str());
-		// set tag to true
-	}
-	writeChanges(txtFile, targetDir, oldName, newName);
-}
-
 /* for now, sort by file extension */
 int main() {
 
 	// initialising dict - loading from a .txt file
 	std::map<std::string, DefaultString> groupings;
-	std::ifstream mapFile;
-	mapFile.open(".map.txt");
-	std::string key, val;
-	while (mapFile >> key >> val) {
-		groupings[key] = DefaultString(val);
-	}
+	groupings = initMap(".map.txt");
 
 	std::string dirPath = fs::current_path();
 	std::ofstream saveFile;

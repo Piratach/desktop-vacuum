@@ -63,8 +63,9 @@ static inline std::string extension(std::string s) {
 	return "";
 }
 
-void writeChanges(std::ofstream& txtFile, std::string targetDir,
-		std::string oldName, std::string newName) {
+static inline void writeChanges(std::ofstream& txtFile,
+		const std::string &targetDir, const std::string &oldName,
+		const std::string &newName) {
 	txtFile << targetDir << '\n'; 
 	txtFile << oldName << '\n';
 	txtFile << newName << '\n';

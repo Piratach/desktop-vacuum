@@ -35,6 +35,10 @@ inline void writeChanges(std::ofstream& txtFile,
 	txtFile << newName << '\n';
 }
 
+inline void updateCount(std::ofstream& txtFile, int count) {
+	txtFile << count << '\n';
+}
+
 void move(std::string oldName, std::string targetDir, std::ofstream& txtFile);
 void autoMove(std::string oldName, std::string targetDir);
 std::map<std::string, DefaultString> initMap(std::string inFile);

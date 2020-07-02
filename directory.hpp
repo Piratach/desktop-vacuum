@@ -10,9 +10,9 @@
 // basically a string that has a default "value" of "others"
 struct DefaultString
 {
-	DefaultString() : value("others") {}
-	DefaultString(std::string s) : value(s) {}
-	std::string value;
+  DefaultString() : value("others") {}
+  DefaultString(std::string s) : value(s) {}
+  std::string value;
 };
 
 // getting extension while ignoring trailing whitespace

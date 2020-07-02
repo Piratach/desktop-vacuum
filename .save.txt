@@ -1,9 +1,3 @@
-png
-Screen Shot 2563-04-08 at 17.37.01.png
-png/Screen Shot 2563-04-08 at 17.37.01.png
-jpg
-test2.jpg
-jpg/test2.jpg
 txt
 text.txt
-txt/text.txt
+txt/2-text.txt

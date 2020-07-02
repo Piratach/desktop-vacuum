@@ -42,3 +42,5 @@ inline void updateCount(std::ofstream& txtFile, int count) {
 void move(std::string oldName, std::string targetDir, std::ofstream& txtFile);
 void autoMove(std::string oldName, std::string targetDir);
 std::map<std::string, DefaultString> initMap(std::string inFile);
+int cleanFile(std::string filePath, std::string fileName,
+		std::map<std::string, DefaultString> groupings);

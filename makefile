@@ -2,7 +2,6 @@ all: manual-cleanup auto-cleanup revert
 
 manual-cleanup: manual-cleanup.o cleanup-tools.o
 	g++ -std=c++17 manual-cleanup.o cleanup-tools.o -o manual-cleanup -lstdc++
-	rm *.o
 
 manual-cleanup.o: manual-cleanup.cpp
 	g++ -std=c++17 -c manual-cleanup.cpp 

@@ -1,5 +1,21 @@
 #include "cleanup-tools.hpp"
 
+int cleanFile(std::string filePath, std::string fileName,
+		std::map<std::string, DefaultString> groupings) {
+	if (fileName[0] == '.' || std::filesystem::is_directory(filePath)) {
+		// ignore hidden files and directories
+		return 0;
+	} else {
+		std::string targetDir = groupings[extension(fileName)].value;
+		if (targetDir == "others") {
+			// let user decide what to do...
+			return 0; 	
+		}
+		autoMove(fileName, targetDir);
+	}
+	return 0;
+}
+
 void move(std::string oldName, std::string targetDir, std::ofstream& txtFile) {
 	// targetDir taken from extension
 	std::string newName = targetDir + "/" + oldName;

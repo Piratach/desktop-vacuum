@@ -4,9 +4,6 @@ png/Screen Shot 2563-04-08 at 17.37.01.png
 jpg
 test2.jpg
 jpg/test2.jpg
-png
-test.png
-png/test.png
 txt
 text.txt
 txt/text.txt

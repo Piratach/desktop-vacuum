@@ -1,9 +1,10 @@
 #include "cleanup-tools.hpp"
 /****************************************************************************
+ * TODO: Make a directory class (with move, initMap etc.).
  * TODO: Flag to check if revert has already been used. 
- * TODO: Two modes - automatic and manual
- *								 - automatic keeps checking for new changes
- *								 - automatic does NOT run the manual once
+ * TODO: Two modes - automatic and manual [DONE]
+ *								 - automatic keeps checking for new changes [DONE]
+ *								 - automatic does NOT run the manual once [DONE]
  *								 - manual means the programme is called once in a while
  *									 to clean up the directory [DONE]
  * TODO: Include an "ignore" list
@@ -23,9 +24,9 @@
 
 
 /****************************************************************************
- * -1. BUG FIX!!! Screen Shot 2563.. in desktop is not working...
+ * -1. BUG FIX!!! Screen Shot 2563.. in desktop is not working... [OK]
  * 0. hash extensions to grouping [OK]
- * 0.1. store and load dict efficiently...
+ * 0.1. store and load dict efficiently...[OK]
  * 1. modularise functions and files [OK]
  * 2. keep track if a dir has already been created or not for efficiency
  * 3. interface

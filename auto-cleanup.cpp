@@ -9,22 +9,6 @@
 
 namespace fs = std::filesystem;
 
-int cleanFile(std::string filePath, std::string fileName,
-		std::map<std::string, DefaultString> groupings) {
-	if (fileName[0] == '.' || fs::is_directory(filePath)) {
-		// ignore hidden files and directories
-		return 0;
-	} else {
-		std::string targetDir = groupings[extension(fileName)].value;
-		if (targetDir == "others") {
-			// let user decide what to do...
-			return 0; 	
-		}
-		autoMove(fileName, targetDir);
-	}
-	return 0;
-}
-
 int main() {
 	std::string dirPath = fs::current_path();
 	int kq = kqueue();
@@ -79,6 +63,8 @@ int main() {
 					// adding to the map and cleaning it up
 					dirManager[currFile] = true;
 					cleanFile(currPath, currFile, groupings);
+					// dirManager is set to true even if it is cleaned up because
+					// if user decides to drag it out again, it will not be cleaned
 				}
 				newNumFiles++;
 			}

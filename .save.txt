@@ -1,3 +1,0 @@
-txt
-text.txt
-txt/2-text.txt

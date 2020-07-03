@@ -8,19 +8,20 @@ manual-cleanup.o: manual-cleanup.cpp
 
 auto-cleanup: auto-cleanup.o directory.o
 	g++ -std=c++17 auto-cleanup.o directory.o -o auto-cleanup -lstdc++
+	rm *.o
 
 auto-cleanup.o: auto-cleanup.cpp
 	g++ -std=c++17 -c auto-cleanup.cpp 
 
-revert: revert.o directory.o
-	g++ -std=c++17 revert.o directory.o -o revert -lstdc++
+directory.o: directory.cpp directory.hpp
+	g++ -std=c++17 -c directory.cpp
+
+revert: revert.o
+	g++ -std=c++17 revert.o -o revert -lstdc++
 	rm *.o
 
 revert.o: revert.cpp
 	g++ -std=c++17 -c revert.cpp
-
-directory.o: directory.cpp directory.hpp
-	g++ -std=c++17 -c directory.cpp
 
 clean:
 	rm -rf manual-cleanup auto-cleanup revert *.o

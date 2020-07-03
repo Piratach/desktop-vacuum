@@ -1,10 +1,7 @@
 #include <iostream>
-#include <cstdio>
-#include <cstring>
-#include <string>
-#include <cerrno>
-#include <filesystem>
 #include <fstream>
+#include <string>
+#include <filesystem>
 #include <map>
 
 // basically a string that has a default "value" of "others"
@@ -38,27 +35,34 @@ class Directory {
       dirPath = path;
     };
 
-    inline void writeChanges(std::ofstream& txtFile,
-        const std::string &targetDir, const std::string &oldName,
-        const std::string &newName) {
-      txtFile << targetDir << '\n'; 
-      txtFile << oldName << '\n';
-      txtFile << newName << '\n';
-    }
+    // reverting for manual mode
+    void revert(void);
 
-    // maybe don't need to return anything? Void?
-    std::map<std::string, DefaultString> initMap(void);
+    /** function for both modes **/
+    
+    // initialises the map using .map.txt
+    void initMap(void);
+    std::string getTargetDir(std::string currPath);
 
-    // manual-only functions
+    /** manual-only functions **/
+
+    // moves file to target directory
     void move(std::string oldName, std::string targetDir,
         std::ofstream& txtFile);
   
-    // auto-only functions
-    void autoMove(std::string oldName, std::string targetDir);
-    int cleanFile(std::string filePath, std::string fileName,
-        std::map<std::string, DefaultString> groupings);
-    void updateNumFiles(int newNumFiles);
-    void initNumFiles(void);
+    /** auto-only functions **/
+
+    // function overloading!
+    void move(std::string oldName, std::string targetDir);
+
+    // does the cleaning
+    void autoClean(void);
+
+    // checks and adjust dirManager for removals
+    void removalCheck(void);
+
+    // initialises both dirManager and currNumFiles
+    void initDirManager(void);
 
   private:
 
@@ -74,5 +78,29 @@ class Directory {
     // auto-only variables
     std::map<std::string, bool> dirManager;
     int currNumFiles;
+    int newNumFiles;
+
+    /** function for both modes **/
+    // used when target directory already contains file of the same name
+    void replaceName(std::string &targetDir, std::string &oldName,
+        std::string &newName, int count);
+
+    /** manual-only function **/
+    // write changes to .save.txt
+    inline void writeChanges(std::ofstream& txtFile,
+        const std::string &targetDir, const std::string &oldName,
+        const std::string &newName) {
+      txtFile << targetDir << '\n'; 
+      txtFile << oldName << '\n';
+      txtFile << newName << '\n';
+    }
+
+    /** auto-only function **/
+
+    // checks file before moving
+    int cleanFile(std::string filePath, std::string fileName);
+
+    // check if file exists within immediate directory
+    bool fileExists(std::string currFile);
 
 };

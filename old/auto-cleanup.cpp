@@ -5,8 +5,7 @@
 #include <sys/event.h>   // for kqueue() etc.
 #include <unistd.h>      // for close()
 
-#include "directory.hpp"
-
+#include "cleanup-tools.hpp"
 
 /****************************************************************************
  * TODO: Ask user whether to clean up everything immediately first (run manual)
@@ -20,15 +19,21 @@ int main() {
   int kq = kqueue();
   int dirfd = open(dirPath.c_str(), O_RDONLY);
 
-  // initialising Directory object
-  Directory currDir(dirPath);
+  // map of files in immediate directory
+  std::map<std::string, bool> dirManager;
+  int oldNumFiles = 0;
+  int newNumFiles = 0;
+  for(auto& p: fs::directory_iterator(dirPath)) {
+    fs::path currPath = p.path();
+    std::string currFile = currPath.filename();
+    dirManager[currFile] = true;
+    oldNumFiles++;
+  }
 
-  // initialising dict - loading from a .txt file
-  currDir.initMap();
-
-  // initialising dirManager and current number of files
-  currDir.initDirManager();
-
+  // map initialised once at the start - may change later
+  std::map<std::string, DefaultString> groupings;
+  groupings = initMap(".map.txt");
+  
   struct kevent direvent;
   EV_SET (&direvent, dirfd, EVFILT_VNODE, EV_ADD | EV_CLEAR | EV_ENABLE, 
      NOTE_WRITE, 0, (void *)dirPath.c_str());
@@ -55,9 +60,32 @@ int main() {
     if (change.udata == NULL) {
       break;
     } else {
-      currDir.autoClean();
-      currDir.removalCheck();
+      // udata is non-null, so it's the name of the directory
+      for(auto& p: fs::directory_iterator(dirPath)) {
+        fs::path currPath = p.path();
+        std::string currFile = currPath.filename();
+        if (!dirManager[currFile]) {
+          // adding to the map and cleaning it up
+          dirManager[currFile] = true;
+          if (cleanFile(currPath, currFile, groupings)) {
+            // since file has now disappeared from directory
+            dirManager[currFile] = false;
+            break;
+          }
+        }
+        newNumFiles++;
+      }
+      if (oldNumFiles >= newNumFiles) {
+        // a file has been deleted/moved
+        oldNumFiles = newNumFiles;
+        for (const auto &pair : dirManager) {
+          if (!fs::exists(pair.first)) {
+            dirManager[pair.first] = false;
+          }
+        }
+      }
     }
+    newNumFiles = 0;
   }
   close(kq);
   return 0;

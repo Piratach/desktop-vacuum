@@ -30,7 +30,7 @@ class Directory {
   public:
 
     // Directory(int mode)
-    Directory(std::string path) : mapFile(".map.txt"), saveFile(".save.txt") 
+    Directory(std::string path) : mapFile(".map.txt"), saveFileName(".save.txt") 
     {
       dirPath = path;
     };
@@ -47,13 +47,14 @@ class Directory {
     /** manual-only functions **/
 
     // moves file to target directory
-    void move(std::string oldName, std::string targetDir,
-        std::ofstream& txtFile);
+
+    void openSaveFile(void);
+    void closeSaveFile(void);
   
     /** auto-only functions **/
 
     // function overloading!
-    void move(std::string oldName, std::string targetDir);
+    void move(std::string oldName, std::string targetDir, int manual=0);
 
     // does the cleaning
     void autoClean(void);
@@ -73,7 +74,8 @@ class Directory {
     std::map<std::string, DefaultString> groupings;
 
     // manual-only variables
-    std::string saveFile;
+    std::string saveFileName;
+    std::ofstream saveFile;
 
     // auto-only variables
     std::map<std::string, bool> dirManager;
@@ -87,12 +89,11 @@ class Directory {
 
     /** manual-only function **/
     // write changes to .save.txt
-    inline void writeChanges(std::ofstream& txtFile,
-        const std::string &targetDir, const std::string &oldName,
-        const std::string &newName) {
-      txtFile << targetDir << '\n'; 
-      txtFile << oldName << '\n';
-      txtFile << newName << '\n';
+    inline void writeChanges(const std::string &targetDir,
+        const std::string &oldName, const std::string &newName) {
+      saveFile << targetDir << '\n'; 
+      saveFile << oldName << '\n';
+      saveFile << newName << '\n';
     }
 
     /** auto-only function **/

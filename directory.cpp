@@ -2,7 +2,7 @@
 
 void Directory::revert(void) {
 	std::ifstream txtFile;
-	txtFile.open(saveFile);
+	txtFile.open(saveFileName);
 	std::string dir, oldName, newName;
 	while (std::getline(txtFile, dir)) {
 		std::getline(txtFile, oldName);
@@ -13,7 +13,7 @@ void Directory::revert(void) {
 		}
 	}
 	txtFile.close();
-  std::filesystem::remove(saveFile);
+  std::filesystem::remove(saveFileName);
 }
 
 void Directory::initMap(void) {
@@ -39,8 +39,8 @@ void Directory::replaceName(std::string &targetDir, std::string &oldName,
 }
 
 // manual-only functions
-void Directory::move(std::string oldName, std::string targetDir,
-    std::ofstream& txtFile) {
+// manual is 0 by default
+void Directory::move(std::string oldName, std::string targetDir, int manual) {
   // targetDir taken from extension
   std::string newName = targetDir + "/" + oldName;
   // check with a tag to avoid computation
@@ -54,24 +54,7 @@ void Directory::move(std::string oldName, std::string targetDir,
     std::rename(oldName.c_str(), newName.c_str());
     // set tag to true
   }
-  writeChanges(txtFile, targetDir, oldName, newName);
-}
-
-// auto-only functions
-void Directory::move(std::string oldName, std::string targetDir) {
-  // targetDir taken from extension
-  std::string newName = targetDir + "/" + oldName;
-  // check with a tag to avoid computation
-  if (std::filesystem::exists(targetDir)) {
-    if (std::filesystem::exists(newName)) {
-      replaceName(targetDir, oldName, newName, 0);
-    }
-    std::rename(oldName.c_str(), newName.c_str());
-  } else {
-    std::filesystem::create_directory(targetDir);
-    std::rename(oldName.c_str(), newName.c_str());
-    // set tag to true
-  }
+  if (manual) writeChanges(targetDir, oldName, newName);
 }
 
 int Directory::cleanFile(std::string filePath, std::string fileName) {
@@ -131,4 +114,12 @@ void Directory::removalCheck(void) {
       }
     }
   }
+}
+
+void Directory::openSaveFile(void) {
+  saveFile.open(saveFileName, std::ofstream::trunc);
+}
+
+void Directory::closeSaveFile(void) {
+  saveFile.close();
 }

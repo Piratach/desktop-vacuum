@@ -1,6 +1,6 @@
 #include "directory.hpp"
 /****************************************************************************
- * TODO: Make a directory class (with move, initMap etc.).
+ * TODO: Make a directory class (with move, initMap etc.). 
  * TODO: Flag to check if revert has already been used. 
  * TODO: Two modes - automatic and manual [DONE]
  *                 - automatic keeps checking for new changes [DONE]
@@ -38,6 +38,9 @@ namespace fs = std::filesystem;
 // should be OK for now
 int main() {
 
+  // manual mode
+  const int MANUAL = 1;
+
   // initialising directory class
   std::string dirPath = fs::current_path();
   Directory currDir(dirPath);
@@ -46,8 +49,7 @@ int main() {
   currDir.initMap();
 
   // maybe add to class?
-  std::ofstream saveFile;
-  saveFile.open(".save.txt", std::ofstream::trunc);
+  currDir.openSaveFile();
 
   for(auto& p: fs::directory_iterator(dirPath)) {
     fs::path currPath = p.path();
@@ -59,9 +61,9 @@ int main() {
       // TIL c++ does not support str switch statements...
       std::string targetDir = currDir.getTargetDir(currPath);
       if (targetDir == "others") continue; // let user decide what to do...
-      currDir.move(currFile, targetDir, saveFile);
+      currDir.move(currFile, targetDir, MANUAL);
     }
   }
-  saveFile.close();
+  currDir.closeSaveFile();
   return 0;
 }

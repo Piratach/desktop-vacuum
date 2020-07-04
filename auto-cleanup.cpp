@@ -17,18 +17,21 @@ namespace fs = std::filesystem;
 
 int main() {
   std::string dirPath = fs::current_path();
+
+  // kqueue is used to "listen" to new files being added
   int kq = kqueue();
   int dirfd = open(dirPath.c_str(), O_RDONLY);
 
   // initialising Directory object
   Directory currDir(dirPath);
 
-  // initialising dict - loading from a .txt file
+  // initialising map between file extensions and groups
   currDir.initMap();
 
-  // initialising dirManager and current number of files
+  // dirManager is used to check status of files in the current directory
   currDir.initDirManager();
 
+  // initialising kevent
   struct kevent direvent;
   EV_SET (&direvent, dirfd, EVFILT_VNODE, EV_ADD | EV_CLEAR | EV_ENABLE, 
      NOTE_WRITE, 0, (void *)dirPath.c_str());
@@ -46,17 +49,19 @@ int main() {
   signal(SIGINT, SIG_IGN);
   // Register the signal event.
   kevent(kq, &sigevent, 1, NULL, 0, NULL);
- 
+
   while (1) {
-     // camp on kevent() until something interesting happens
     struct kevent change;
+    // waits until file within directory has been modified
     if (kevent(kq, NULL, 0, &change, 1, NULL) == -1) { exit(1); }
     // The signal event has NULL in the user data.  Check for that first.
     if (change.udata == NULL) {
       break;
     } else {
+      // clean up new files and check status of files
       currDir.autoClean();
       currDir.removalCheck();
+      // TODO: check how renaming effects everything
     }
   }
   close(kq);

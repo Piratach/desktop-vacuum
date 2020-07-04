@@ -30,7 +30,8 @@ class Directory {
   public:
 
     // Directory(int mode)
-    Directory(std::string path) : mapFile(".map.txt"), saveFileName(".save.txt") 
+    Directory(std::string path) : mapFileName(".map.txt"), 
+                                  saveFileName(".save.txt") 
     {
       dirPath = path;
     };
@@ -69,7 +70,7 @@ class Directory {
 
     // variables needed for both auto and manual
     int mode; // manual or auto [not yet implemented]
-    std::string mapFile;
+    std::string mapFileName;
     std::string dirPath; // path of dir to monitor
     std::map<std::string, DefaultString> groupings;
 

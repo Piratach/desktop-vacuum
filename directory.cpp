@@ -1,6 +1,14 @@
 #include "directory.hpp"
 
 void Directory::revert(void) {
+
+  // in the case that revert has already been used or 
+  // manual-cleanup has not been called
+  if (!std::filesystem::exists(saveFileName)) {
+    std::cout << "Nothing to revert." << std::endl;
+    return;
+  }
+
 	std::ifstream txtFile;
 	txtFile.open(saveFileName);
 	std::string dir, oldName, newName;
@@ -18,7 +26,7 @@ void Directory::revert(void) {
 
 void Directory::initMap(void) {
   std::ifstream infile;
-  infile.open(mapFile);
+  infile.open(mapFileName);
   std::string key, val;
   while (infile >> key >> val) {
     groupings[key] = DefaultString(val);

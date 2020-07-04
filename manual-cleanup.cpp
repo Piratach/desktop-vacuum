@@ -1,6 +1,6 @@
 #include "directory.hpp"
 /****************************************************************************
- * TODO: Make a directory class (with move, initMap etc.). 
+ * TODO: Make a directory class (with move, initMap etc.). [DONE]
  * TODO: Flag to check if revert has already been used. 
  * TODO: Two modes - automatic and manual [DONE]
  *                 - automatic keeps checking for new changes [DONE]

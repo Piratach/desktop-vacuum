@@ -1,5 +1,5 @@
 /****************************************************************************
- * 0. Bug check (renaming + reverting...)
+ * 0. Update documentation and comments/style
  * 1. Build an interface using SFML
  * 2. "Ignore" list
  * 3. Keep track if a dir has already been created or not for efficiency
@@ -15,6 +15,7 @@
  *                  (e.g. audio - .mid, .mp3, .wav)
  *                - add extensions
  *                - what to do with "others" (ignore/add to "others' folder)
+ * TODO: Display relevant error messages!
  ****************************************************************************/
 
 

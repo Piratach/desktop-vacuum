@@ -7,7 +7,6 @@
 
 #include "directory.hpp"
 
-
 /****************************************************************************
  * TODO: Ask user whether to clean up everything immediately first (run manual)
  *       or to save all files right now into an ignore list
@@ -21,6 +20,7 @@ int main() {
   // kqueue is used to "listen" to new files being added
   int kq = kqueue();
   int dirfd = open(dirPath.c_str(), O_RDONLY);
+  int cleaned;
 
   // initialising Directory object
   Directory currDir(dirPath);
@@ -53,15 +53,15 @@ int main() {
   while (1) {
     struct kevent change;
     // waits until file within directory has been modified
-    if (kevent(kq, NULL, 0, &change, 1, NULL) == -1) { exit(1); }
+    if (kevent(kq, NULL, EVFILT_VNODE, &change, 1, NULL) == -1) { exit(1); }
     // The signal event has NULL in the user data.  Check for that first.
     if (change.udata == NULL) {
       break;
     } else {
+      std::cout << "Change!" << std::endl;
       // clean up new files and check status of files
-      currDir.autoClean();
-      currDir.removalCheck();
-      // TODO: check how renaming effects everything
+      if (cleaned) cleaned = 0;
+      else cleaned = currDir.autoClean();
     }
   }
   close(kq);

@@ -55,13 +55,10 @@ class Directory {
     /** auto-only functions **/
 
     // function overloading!
-    void move(std::string oldName, std::string targetDir, int manual=0);
+    int move(std::string oldName, std::string targetDir, int manual=0);
 
     // does the cleaning
-    void autoClean(void);
-
-    // checks and adjust dirManager for removals
-    void removalCheck(void);
+    int autoClean(void);
 
     // initialises both dirManager and currNumFiles
     void initDirManager(void);
@@ -88,6 +85,8 @@ class Directory {
     void replaceName(std::string &targetDir, std::string &oldName,
         std::string &newName, int count);
 
+    int ignore(std::string filePath, std::string fileName);
+
     /** manual-only function **/
     // write changes to .save.txt
     inline void writeChanges(const std::string &targetDir,
@@ -100,9 +99,12 @@ class Directory {
     /** auto-only function **/
 
     // checks file before moving
-    int cleanFile(std::string filePath, std::string fileName);
+    int cleanFile(std::string fileName);
 
-    // check if file exists within immediate directory
+    // check if file existed within immediate directory
     bool fileExists(std::string currFile);
+
+    // checks and adjust dirManager for removals
+    void removalCheck(void);
 
 };

@@ -1,5 +1,14 @@
+/****************************************************************************
+ * directory.cpp
+ * 1. contains the implementation of the Directory class functions
+ ****************************************************************************/
+
 #include "directory.hpp"
 
+/**************************** Public Functions *******************************/
+
+// Reverts changes made by Manual-Cleanup by checking the writes made 
+// in .save.txt. 
 void Directory::revert(void) {
 
   // in the case that revert has already been used or 
@@ -27,6 +36,7 @@ void Directory::revert(void) {
   std::filesystem::remove(saveFileName);
 }
 
+// Initialises the target directory map by reading from .map.txt
 void Directory::initMap(void) {
   std::ifstream infile;
   infile.open(mapFileName);
@@ -36,21 +46,15 @@ void Directory::initMap(void) {
   }
 }
 
+// Returns the target directory of a file type by using a map
 std::string Directory::getTargetDir(std::string currPath) {
   return groupings[extension(currPath)].value;
 }
 
-void Directory::replaceName(std::string &targetDir, std::string &oldName,
-    std::string &newName, int count) {
-  newName = targetDir + "/" + std::to_string(count) + "-" + oldName;
-  if (std::filesystem::exists(newName)) {
-    replaceName(targetDir, oldName, newName, count + 1);
-  }
-  return;
-}
-
-// manual-only functions
-// manual is 0 by default
+// Directory.move will ALWAYS move the file out of immediate directory
+// Arguments: name of current file, target directory to move to, current mode
+// Returns: 1, if no new directory has been created
+//          0, otherwise
 int Directory::move(std::string oldName, std::string targetDir, int manual) {
   // targetDir taken from extension
   std::string newName = targetDir + "/" + oldName;
@@ -71,23 +75,80 @@ int Directory::move(std::string oldName, std::string targetDir, int manual) {
   return 1;
 }
 
-int Directory::ignore(std::string filePath, std::string fileName) {
-  if (fileName[0] == '.' || std::filesystem::is_directory(filePath)) {
-    // include ignore list in the future
-    return 1;
-  }
-  return 0;
+/************************ Public SaveFile Functions **************************/
+/* (Manual-mode Functions) */
+
+void Directory::openSaveFile(void) {
+  saveFile.open(saveFileName, std::ofstream::trunc);
 }
 
-int Directory::cleanFile(std::string fileName) {
-  std::string targetDir = groupings[extension(fileName)].value;
-  if (targetDir == "others") {
-    // let user decide what to do...
-    return 0;   
-  }
-  return move(fileName, targetDir);
+void Directory::closeSaveFile(void) {
+  saveFile.close();
 }
 
+/************************ Public Auto-mode Functions *************************/
+
+// autoClean: performs a check on what change was made to the directory
+//            and performs the appropriate action
+// returns: 1, if the function has triggered another kevent (moving files)
+//          0, otherwise
+int Directory::autoClean(void) {
+  std::string fileFound = "";
+  newNumFiles = 0;
+  for(auto& p: std::filesystem::directory_iterator(dirPath)) {
+    std::filesystem::path currPath = p.path();
+    std::string currFile = currPath.filename();
+    if (!fileExists(currFile)) {
+
+      // if new file added should be ignored
+      if (ignore(currPath, currFile)) {
+        dirManager[currFile] = true;
+        return 0;
+      }
+
+      // either new file or renaming
+      fileFound = currFile;
+    }
+    newNumFiles++;
+  }
+  
+  // we are now casing on number of files to check for renamings
+  if (currNumFiles == newNumFiles) {
+    // file renamed
+    dirManager[fileFound] = true;
+    removalCheck(); // remove old name from dirManager
+    return 0; // kevent not triggered
+
+  // find a better way to do this :(
+  } else if (currNumFiles < newNumFiles) {
+    // clean up new file
+    dirManager[fileFound] = true;
+    int flag = cleanFile(fileFound);
+    if (flag == -1) {
+      currNumFiles = newNumFiles;
+      return 0;
+    // moved
+    } else if (flag == 1) {
+      // new directory
+      currNumFiles = newNumFiles;
+    }
+    dirManager[fileFound] = false;
+    return 1; // kevent triggered
+
+  } else { 
+    // file removal
+    if (fileFound != "") {
+      std::cerr << "File " << fileFound << " seems to have been removed";
+      std::cerr << " but is not." << std::endl;
+      std::exit(EXIT_FAILURE);
+    }
+    // update dirManager
+    removalCheck(); 
+    return 0; // kevent not triggered
+  }
+}
+
+// loops through all the files in the current directory and record their info
 void Directory::initDirManager(void) {
   currNumFiles = 0;
   for(auto& p: std::filesystem::directory_iterator(dirPath)) {
@@ -98,58 +159,52 @@ void Directory::initDirManager(void) {
   }
 }
 
+/**************************** Private Functions ******************************/
+
+// replaceName: a recursive function that makes sure that files of the same
+//              are not overwritten
+// returns: nothing, but stores the new filename in newName
+void Directory::replaceName(std::string &targetDir, std::string &oldName,
+    std::string &newName, int count) {
+  newName = targetDir + "/" + std::to_string(count) + "-" + oldName;
+  if (std::filesystem::exists(newName)) {
+    replaceName(targetDir, oldName, newName, count + 1);
+  }
+}
+
+// ignore: checks whether or not to move the file
+// returns: 1, if file should be ignored
+//          0, otherwise
+int Directory::ignore(std::string filePath, std::string fileName) {
+  if (fileName[0] == '.' || std::filesystem::is_directory(filePath)) {
+    // include ignore list in the future
+    return 1;
+  }
+  return 0;
+}
+
+/*********************** Private Auto-mode Functions *************************/
+
+// returns: 1, if a new directory has been created (+ move)
+//         -1, if no move is needed
+//          0, otherwise (move but no new directory)
+int Directory::cleanFile(std::string fileName) {
+  std::string targetDir = groupings[extension(fileName)].value;
+  if (targetDir == "others") {
+    // let user decide what to do...
+    // currently, nothing is done so no new directory has been created
+    return -1;  
+  }
+  return move(fileName, targetDir);
+}
+
+// fileExists: checks if currFile exists in the record
+// if a file does not exist, then this means that it is a new file
 bool Directory::fileExists(std::string currFile) {
   return dirManager[currFile];
 }
 
-int Directory::autoClean(void) {
-  std::string fileFound = "";
-  newNumFiles = 0;
-  for(auto& p: std::filesystem::directory_iterator(dirPath)) {
-    std::filesystem::path currPath = p.path();
-    std::string currFile = currPath.filename();
-    if (!fileExists(currFile)) {
-      if (ignore(currPath, currFile)) {
-        dirManager[currFile] = true;
-        return 0;
-      }
-      // file is at least not in current map and is not dir or hidden file
-      // (or in ignore list...)
-      fileFound = currFile;
-    }
-    newNumFiles++;
-  }
-
-  // ASSERT: (file not in map) && (file not in ignore list)
-  //      || (fileFound == "")
-  
-  // we are now casing on number of files to check for renamings
-  if (currNumFiles == newNumFiles) {
-    // file renamed
-    dirManager[fileFound] = true;
-    removalCheck(); // remove old name from dirManager
-    return 0;
-  } else if (currNumFiles < newNumFiles) {
-    // this is a new file -> clean it up
-    dirManager[fileFound] = true;
-    // line below could be false if "others" dir
-    if (cleanFile(fileFound)) dirManager[fileFound] = false;
-    else currNumFiles = newNumFiles;
-    return 1;
-  } else {
-    // currNumFiles > newNumFiles case
-    // a file has been removed
-    // update dirManager
-    if (fileFound != "") {
-      std::cerr << "File " << fileFound << " seems to have been removed";
-      std::cerr << " but is not." << std::endl;
-      std::exit(EXIT_FAILURE);
-    }
-    removalCheck(); 
-    return 0;
-  }
-}
-
+// removalCheck: checks for removal and records it
 void Directory::removalCheck(void) {
   if (currNumFiles >= newNumFiles) {
     // a file has been deleted/moved
@@ -162,10 +217,3 @@ void Directory::removalCheck(void) {
   }
 }
 
-void Directory::openSaveFile(void) {
-  saveFile.open(saveFileName, std::ofstream::trunc);
-}
-
-void Directory::closeSaveFile(void) {
-  saveFile.close();
-}

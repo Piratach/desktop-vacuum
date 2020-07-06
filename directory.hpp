@@ -1,10 +1,17 @@
+/****************************************************************************
+ * directory.hpp
+ * 1. header file for the Directory class
+ * 2. contains a few other functions used in the cleanup files
+ * 3. defines the DefaultString struct
+ ****************************************************************************/
+
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <filesystem>
 #include <map>
 
-// basically a string that has a default "value" of "others"
+// String with a default value of "others"
 struct DefaultString
 {
   DefaultString() : value("others") {}
@@ -12,7 +19,7 @@ struct DefaultString
   std::string value;
 };
 
-// getting extension while ignoring trailing whitespace
+// Gets the extension (.jpg) whilst ignoring the trailing whitespaces
 inline std::string extension(std::string s) {
   int len = 0;
   for (int i = s.size() - 1; i >= 0; i--) {
@@ -29,65 +36,48 @@ class Directory {
 
   public:
 
-    // Directory(int mode)
+    /** Constructor for Directory Class **/
     Directory(std::string path) : mapFileName(".map.txt"), 
                                   saveFileName(".save.txt") 
     {
       dirPath = path;
     };
 
-    // reverting for manual mode
+    /** Revert Mode for Manual-Cleanup **/
     void revert(void);
 
-    /** function for both modes **/
-    
-    // initialises the map using .map.txt
-    void initMap(void);
+    /** Functions used for Both Modes **/
+    void initMap(void); 
     std::string getTargetDir(std::string currPath);
+    int move(std::string oldName, std::string targetDir, int manual=0);
 
-    /** manual-only functions **/
-
-    // moves file to target directory
-
+    /** Manual-only Functions **
+     *  Writes to a save file that is used in revert */
     void openSaveFile(void);
     void closeSaveFile(void);
   
-    /** auto-only functions **/
-
-    // function overloading!
-    int move(std::string oldName, std::string targetDir, int manual=0);
-
-    // does the cleaning
+    /** Auto-only functions **/
     int autoClean(void);
-
-    // initialises both dirManager and currNumFiles
     void initDirManager(void);
 
   private:
 
-    // variables needed for both auto and manual
+    /** Variables used in both modes **/
     int mode; // manual or auto [not yet implemented]
     std::string mapFileName;
     std::string dirPath; // path of dir to monitor
     std::map<std::string, DefaultString> groupings;
 
-    // manual-only variables
-    std::string saveFileName;
-    std::ofstream saveFile;
-
-    // auto-only variables
-    std::map<std::string, bool> dirManager;
-    int currNumFiles;
-    int newNumFiles;
-
-    /** function for both modes **/
     // used when target directory already contains file of the same name
     void replaceName(std::string &targetDir, std::string &oldName,
         std::string &newName, int count);
 
     int ignore(std::string filePath, std::string fileName);
 
-    /** manual-only function **/
+    /** Manual-only variables **/
+    std::string saveFileName;
+    std::ofstream saveFile;
+
     // write changes to .save.txt
     inline void writeChanges(const std::string &targetDir,
         const std::string &oldName, const std::string &newName) {
@@ -96,9 +86,11 @@ class Directory {
       saveFile << newName << '\n';
     }
 
-    /** auto-only function **/
+    /** Auto-only variables **/
+    std::map<std::string, bool> dirManager;
+    int currNumFiles;
+    int newNumFiles;
 
-    // checks file before moving
     int cleanFile(std::string fileName);
 
     // check if file existed within immediate directory

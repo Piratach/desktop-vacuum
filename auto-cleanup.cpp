@@ -58,7 +58,7 @@ int main() {
     if (change.udata == NULL) {
       break;
     } else {
-      std::cout << "Change!" << std::endl;
+      // std::cout << "Change!" << std::endl;
       // clean up new files and check status of files
       if (cleaned) cleaned = 0;
       else cleaned = currDir.autoClean();

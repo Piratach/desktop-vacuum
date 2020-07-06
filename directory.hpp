@@ -50,6 +50,7 @@ class Directory {
     void initMap(void); 
     std::string getTargetDir(std::string currPath);
     int move(std::string oldName, std::string targetDir, int manual=0);
+    int ignore(std::string filePath, std::string fileName);
 
     /** Manual-only Functions **
      *  Writes to a save file that is used in revert */
@@ -71,8 +72,6 @@ class Directory {
     // used when target directory already contains file of the same name
     void replaceName(std::string &targetDir, std::string &oldName,
         std::string &newName, int count);
-
-    int ignore(std::string filePath, std::string fileName);
 
     /** Manual-only variables **/
     std::string saveFileName;

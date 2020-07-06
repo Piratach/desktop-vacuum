@@ -58,21 +58,35 @@ std::string Directory::getTargetDir(std::string currPath) {
 int Directory::move(std::string oldName, std::string targetDir, int manual) {
   // targetDir taken from extension
   std::string newName = targetDir + "/" + oldName;
+  int flag;
   // check with a tag to avoid computation
   if (std::filesystem::exists(targetDir)) {
     if (std::filesystem::exists(newName)) {
       replaceName(targetDir, oldName, newName, 0);
     }
     std::rename(oldName.c_str(), newName.c_str());
-    return 1;
+    flag = 1;
   } else {
     std::filesystem::create_directory(targetDir);
     std::rename(oldName.c_str(), newName.c_str());
     // set tag to true
-    return 0;
+    flag = 0;
   }
-  if (manual) writeChanges(targetDir, oldName, newName);
-  return 1;
+  if (manual) {
+    writeChanges(targetDir, oldName, newName);
+  }
+  return flag;
+}
+
+// ignore: checks whether or not to move the file
+// returns: 1, if file should be ignored
+//          0, otherwise
+int Directory::ignore(std::string filePath, std::string fileName) {
+  if (fileName[0] == '.' || std::filesystem::is_directory(filePath)) {
+    // include ignore list in the future
+    return 1;
+  }
+  return 0;
 }
 
 /************************ Public SaveFile Functions **************************/
@@ -170,17 +184,6 @@ void Directory::replaceName(std::string &targetDir, std::string &oldName,
   if (std::filesystem::exists(newName)) {
     replaceName(targetDir, oldName, newName, count + 1);
   }
-}
-
-// ignore: checks whether or not to move the file
-// returns: 1, if file should be ignored
-//          0, otherwise
-int Directory::ignore(std::string filePath, std::string fileName) {
-  if (fileName[0] == '.' || std::filesystem::is_directory(filePath)) {
-    // include ignore list in the future
-    return 1;
-  }
-  return 0;
 }
 
 /*********************** Private Auto-mode Functions *************************/

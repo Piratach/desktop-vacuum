@@ -22,7 +22,7 @@ int main() {
   for(auto& p: fs::directory_iterator(dirPath)) {
     fs::path currPath = p.path();
     std::string currFile = currPath.filename();
-    if (currFile[0] == '.' || fs::is_directory(currPath)) {
+    if (currDir.ignore(currPath, currFile)) {
       // ignore hidden files and directories
       continue;
     } else {

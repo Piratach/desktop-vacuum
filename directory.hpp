@@ -56,7 +56,7 @@ class Directory {
      *  Writes to a save file that is used in revert */
     void openSaveFile(void);
     void closeSaveFile(void);
-  
+ 
     /** Auto-only functions **/
     int autoClean(void);
     void initDirManager(void);

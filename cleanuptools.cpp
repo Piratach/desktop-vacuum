@@ -1,16 +1,20 @@
-#include "directory.hpp"
+#include "cleanuptools.hpp"
 
-namespace fs = std::filesystem;
+int CleanupTools::initCurrDir(std::string dirName) {
+  if (std::filesystem::exists(dirName)) {
+    std::cout << "Directory " << dirName;
+    std::cout << " could not be found" << std::endl;
+    return -1;
+  }
+  currDir = Directory(dirName);
+  return 0;
+}
 
 /* for now, sort by file extension */
-int Directory::manualCleanup() {
+int CleanupTools::manualCleanup() {
 
   // manual mode
   const int MANUAL = 1;
-
-  // initialising directory class
-  std::string dirPath = fs::current_path();
-  Directory currDir(dirPath);
 
   // initialising the map betwen extensions and groups
   currDir.initMap();
@@ -19,8 +23,8 @@ int Directory::manualCleanup() {
   currDir.openSaveFile();
 
   // looping through each file in the directory
-  for(auto& p: fs::directory_iterator(dirPath)) {
-    fs::path currPath = p.path();
+  for(auto& p: std::filesystem::directory_iterator(dirPath)) {
+    std::filesystem::path currPath = p.path();
     std::string currFile = currPath.filename();
     if (currDir.ignore(currPath, currFile)) {
       // ignore hidden files and directories
@@ -33,5 +37,10 @@ int Directory::manualCleanup() {
     }
   }
   currDir.closeSaveFile();
+  return 0;
+}
+
+int CleanupTools::revert() {
+  currDir.revert();
   return 0;
 }

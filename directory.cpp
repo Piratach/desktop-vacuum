@@ -41,6 +41,7 @@ void Directory::initMap(void) {
   std::ifstream infile;
   infile.open(mapFileName);
   std::string key, val;
+  groupings.clear();
   while (infile >> key >> val) {
     groupings[key] = DefaultString(val);
   }

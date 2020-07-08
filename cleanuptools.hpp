@@ -1,3 +1,12 @@
+/*****************************************************************************
+ * cleanuptools.hpp
+ * 1. Wrapper class for cleanup functions
+ * 2. Initialised by giving it the directory name
+ *
+ * TODO
+ * 1. Directory name error checking
+ *****************************************************************************/
+
 #include "directory.hpp"
 
 class CleanupTools {

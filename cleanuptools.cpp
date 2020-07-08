@@ -1,3 +1,11 @@
+/*****************************************************************************
+ * cleanuptools.cpp
+ * 1. Implementations of the class functions
+ *
+ * TODO
+ * 1. Add auto-cleanup
+ *****************************************************************************/
+
 #include "cleanuptools.hpp"
 
 int CleanupTools::initCurrDir(std::string dirName) {

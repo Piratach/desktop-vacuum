@@ -38,6 +38,7 @@ int main()
 	/* 1. Find out how to change colour of render window
 	 *		- we want the base to be dark blue colour, not black
 	 * 2. Make a button to find files in the directory */
+  int pid;
 	sf::RenderWindow window(sf::VideoMode(510, 290), "Directory Cleanup", sf::Style::Default);
 	sf::RectangleShape rectangle1(sf::Vector2f(100.f, 100.f));
 	rectangle1.setFillColor(sf::Color::Blue);
@@ -79,11 +80,18 @@ int main()
             rectangle1.setFillColor(sf::Color::Red);
             rectangle2.setFillColor(sf::Color::Blue);
             cleaner.manualCleanup();
-          }
-          if (390 <= x && x <= 490 && y >= 95 && y <= 195) {
+          } else if (390 <= x && x <= 490 && y >= 95 && y <= 195) {
             rectangle2.setFillColor(sf::Color::Red);
             rectangle1.setFillColor(sf::Color::Blue);
             cleaner.revert();
+          } else {
+            rectangle2.setFillColor(sf::Color::Blue);
+            rectangle1.setFillColor(sf::Color::Blue);
+            pid = fork();
+            if (pid == 0) {
+              cleaner.autoCleanup();
+              exit(0);
+            }
           }
           std::cout << "x: " << x << std::endl;
           std::cout << "y: " << y << std::endl;

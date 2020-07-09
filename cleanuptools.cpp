@@ -52,3 +52,55 @@ int CleanupTools::revert() {
   currDir.revert();
   return 0;
 }
+
+int CleanupTools::autoCleanup() {
+
+  std::cout << "Auto-cleanup..." << std::endl;
+
+  // kqueue is used to "listen" to new files being added
+  int kq = kqueue();
+  int dirfd = open(dirPath.c_str(), O_RDONLY);
+  int cleaned;
+
+  // initialising map between file extensions and groups
+  currDir.initMap();
+
+  // dirManager is used to check status of files in the current directory
+  currDir.initDirManager();
+
+  // initialising kevent
+  struct kevent direvent;
+  EV_SET (&direvent, dirfd, EVFILT_VNODE, EV_ADD | EV_CLEAR | EV_ENABLE, 
+     NOTE_WRITE, 0, (void *)dirPath.c_str());
+
+  kevent(kq, &direvent, 1, NULL, 0, NULL);
+  kevent(kq, &direvent, 1, NULL, 0, NULL);
+
+  // Register interest in SIGINT with the queue.  The user data
+  // is NULL, which is how we'll differentiate between
+  // a directory-modification event and a SIGINT-received event.
+  struct kevent sigevent;
+  EV_SET (&sigevent, SIGINT, EVFILT_SIGNAL, EV_ADD | EV_ENABLE, 0, 0, NULL);
+  // kqueue event handling happens after the legacy API, so make
+  // sure it doesn eat the signal before the kqueue can see it.
+  signal(SIGINT, SIG_IGN);
+  // Register the signal event.
+  kevent(kq, &sigevent, 1, NULL, 0, NULL);
+
+  while (1) {
+    struct kevent change;
+    // waits until file within directory has been modified
+    if (kevent(kq, NULL, EVFILT_VNODE, &change, 1, NULL) == -1) { exit(1); }
+    // The signal event has NULL in the user data.  Check for that first.
+    if (change.udata == NULL) {
+      break;
+    } else {
+      std::cout << "Change!" << std::endl;
+      // clean up new files and check status of files
+      if (cleaned) cleaned = 0;
+      else cleaned = currDir.autoClean();
+    }
+  }
+  close(kq);
+  return 0;
+}

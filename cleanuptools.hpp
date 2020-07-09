@@ -7,6 +7,13 @@
  * 1. Directory name error checking
  *****************************************************************************/
 
+#include <errno.h>       // for errno
+#include <fcntl.h>       // for O_RDONLY
+#include <stdio.h>       // for fprintf()
+#include <stdlib.h>      // for EXIT_SUCCESS
+#include <sys/event.h>   // for kqueue() etc.
+#include <unistd.h>      // for close()
+
 #include "directory.hpp"
 
 class CleanupTools {

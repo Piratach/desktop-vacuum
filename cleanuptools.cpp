@@ -60,7 +60,7 @@ int CleanupTools::autoCleanup() {
   // kqueue is used to "listen" to new files being added
   int kq = kqueue();
   int dirfd = open(dirPath.c_str(), O_RDONLY);
-  int cleaned;
+  int cleaned = 0;
 
   // initialising map between file extensions and groups
   currDir.initMap();
@@ -99,6 +99,8 @@ int CleanupTools::autoCleanup() {
       // clean up new files and check status of files
       if (cleaned) cleaned = 0;
       else cleaned = currDir.autoClean();
+
+      std::cout << "Change done!" << std::endl;
     }
   }
   close(kq);

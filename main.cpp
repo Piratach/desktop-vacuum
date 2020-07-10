@@ -20,6 +20,7 @@
 
 #include "cleanuptools.hpp"
 #include <SFML/Graphics.hpp>
+#include <csignal>
 
 namespace fs = std::filesystem;
 
@@ -39,6 +40,7 @@ int main()
 	 *		- we want the base to be dark blue colour, not black
 	 * 2. Make a button to find files in the directory */
   int pid;
+  int AUTOCLEAN = 0;
 	sf::RenderWindow window(sf::VideoMode(510, 290), "Directory Cleanup", sf::Style::Default);
 	sf::RectangleShape rectangle1(sf::Vector2f(100.f, 100.f));
 	rectangle1.setFillColor(sf::Color::Blue);
@@ -62,6 +64,7 @@ int main()
 			{
 				case sf::Event::Closed:
           window.close();
+          if (AUTOCLEAN) kill(pid, SIGKILL);
 					break;
 
 				case sf::Event::LostFocus:
@@ -85,12 +88,17 @@ int main()
             rectangle1.setFillColor(sf::Color::Blue);
             cleaner.revert();
           } else {
-            rectangle2.setFillColor(sf::Color::Blue);
-            rectangle1.setFillColor(sf::Color::Blue);
-            pid = fork();
-            if (pid == 0) {
-              cleaner.autoCleanup();
-              exit(0);
+            if (!AUTOCLEAN) {
+              rectangle2.setFillColor(sf::Color::Blue);
+              rectangle1.setFillColor(sf::Color::Blue);
+              pid = fork();
+              if (pid == 0) {
+                cleaner.autoCleanup();
+                exit(0);
+              }
+              AUTOCLEAN = 1;
+            } else {
+              kill(pid, SIGKILL);
             }
           }
           std::cout << "x: " << x << std::endl;

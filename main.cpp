@@ -17,6 +17,13 @@
  * TODO: Display relevant error messages!
  *****************************************************************************/
 
+	// sf::RectangleShape rectangle1(sf::Vector2f(100.f, 100.f));
+	// rectangle1.setFillColor(sf::Color::Blue);
+  // rectangle1.setPosition(20, 95);
+	// sf::RectangleShape rectangle2(sf::Vector2f(100.f, 100.f));
+	// rectangle2.setFillColor(sf::Color::Blue);
+  // rectangle2.setPosition(390, 95);
+
 
 #include "cleanuptools.hpp"
 #include <SFML/Graphics.hpp>
@@ -41,28 +48,25 @@ int main()
 	 * 2. Make a button to find files in the directory */
   int pid;
   int AUTOCLEAN = 0;
-  sf::Color bgColour(56, 59, 62);
-  sf::Font font;
-  sf::Text manualText, autoText, groupText, ignoreText;
+  int EVENTPROCESSED = 1;
+
+  /* Background Settings */
+  // sf::Color bgColour(56, 59, 62);
+  sf::Color bgColour(38, 45, 58);
 	sf::RenderWindow window(sf::VideoMode(510, 290), "Cleanup",
       sf::Style::Default);
+  window.setVerticalSyncEnabled(true);
   sf::RectangleShape line(sf::Vector2f(510, 2));
   line.setFillColor(sf::Color::Black);
   line.setPosition(0, 0);
-	// sf::RectangleShape rectangle1(sf::Vector2f(100.f, 100.f));
-	// rectangle1.setFillColor(sf::Color::Blue);
-  // rectangle1.setPosition(20, 95);
-	// sf::RectangleShape rectangle2(sf::Vector2f(100.f, 100.f));
-	// rectangle2.setFillColor(sf::Color::Blue);
-  // rectangle2.setPosition(390, 95);
 
-  std::string dirPath = fs::current_path();
-
-  CleanupTools cleaner(dirPath);
+  /* Text */
+  sf::Font font;
+  sf::Text manualText, autoText, groupText, ignoreText;
 
   // loading font
   if (!font.loadFromFile("OpenSans-Light.ttf")) {
-    std::cerr << "Error: OpenSans-Light.ttf not found" << std::endl;
+    std::cerr << "Error: OpenSans-Light.ttf not found." << std::endl;
     exit(EXIT_FAILURE);
   }
 
@@ -71,7 +75,7 @@ int main()
   manualText.setString("Manual");
   manualText.setCharacterSize(16);
   manualText.setFillColor(sf::Color::White);
-  manualText.setPosition(10, 5);
+  manualText.setPosition(6, 5);
 
   autoText.setFont(font);
   autoText.setString("Auto");
@@ -83,17 +87,46 @@ int main()
   groupText.setString("Groupings");
   groupText.setCharacterSize(16);
   groupText.setFillColor(sf::Color::White);
-  groupText.setPosition(120, 5);
+  groupText.setPosition(124, 5);
 
   ignoreText.setFont(font);
   ignoreText.setString("Ignorelist");
   ignoreText.setCharacterSize(16);
   ignoreText.setFillColor(sf::Color::White);
-  ignoreText.setPosition(205, 5);
+  ignoreText.setPosition(210, 5);
 
+  /* Boxes around text */
+  sf::RectangleShape divLineL;
+  divLineL.setPosition(0, 31);
+  divLineL.setFillColor(sf::Color::White);
+
+  sf::RectangleShape divLineR(sf::Vector2f(441, 1));
+  divLineR.setPosition(69, 31);
+  divLineR.setFillColor(sf::Color::White);
+
+  sf::RectangleShape manLine(sf::Vector2f(30, 1));
+  manLine.rotate(90);
+  manLine.setFillColor(sf::Color::White);
+  manLine.setPosition(69, 2);
+
+  sf::RectangleShape autoLine(sf::Vector2f(30, 1));
+  autoLine.rotate(90);
+  autoLine.setFillColor(bgColour);
+  autoLine.setPosition(118, 2);
+
+  /** Cleaner **/
+
+  std::string dirPath = fs::current_path();
+
+  CleanupTools cleaner(dirPath);
+
+
+  /* Event-based rendering */
 	while (window.isOpen()) {
 		sf::Event event;
 		while (window.pollEvent(event)) {
+
+      EVENTPROCESSED = 1;
       float x = sf::Mouse::getPosition(window).x;
       float y = sf::Mouse::getPosition(window).y;
 			switch(event.type) {
@@ -115,18 +148,23 @@ int main()
         case sf::Event::MouseButtonPressed:
           // first button
           if (AUTOCLEAN) kill(pid, SIGKILL);
-          if (20 <= x && x <= 120 && y >= 95 && y <= 195) {
-            // rectangle1.setFillColor(sf::Color::Red);
-            // rectangle2.setFillColor(sf::Color::Blue);
+          if (69 <= x && x <= 118 && y >= 0 && y <= 32) {
+            // Auto tab
+            divLineL.setSize(sf::Vector2f(69, 1));
+            divLineR.setPosition(118, 31);
+            divLineR.setSize(sf::Vector2f(392, 1));
+            autoLine.setFillColor(sf::Color::White);
+
             // cleaner.manualCleanup();
           } else if (390 <= x && x <= 490 && y >= 95 && y <= 195) {
-            // rectangle2.setFillColor(sf::Color::Red);
-            // rectangle1.setFillColor(sf::Color::Blue);
             // cleaner.revert();
           } else {
+            // Manual tab
+            divLineL.setSize(sf::Vector2f(0, 0));
+            divLineR.setPosition(69, 31);
+            divLineR.setSize(sf::Vector2f(441, 1));
+            autoLine.setFillColor(bgColour);
             // if (!AUTOCLEAN) {
-              // rectangle2.setFillColor(sf::Color::Blue);
-              // rectangle1.setFillColor(sf::Color::Blue);
               // pid = fork();
               // if (pid == 0) {
                 // cleaner.autoCleanup();
@@ -144,15 +182,25 @@ int main()
 			}
 		}
 
-		window.clear(bgColour);
-    window.draw(line);
-		// window.draw(rectangle1);
-		// window.draw(rectangle2);
-    window.draw(manualText);
-    window.draw(autoText);
-    window.draw(groupText);
-    window.draw(ignoreText);
-		window.display();
+    if (EVENTPROCESSED) {
+      window.clear(bgColour);
+      window.draw(line);
+
+      /** Drawing text boxes **/
+      window.draw(divLineL);
+      window.draw(divLineR);
+      window.draw(manLine);
+      window.draw(autoLine);
+      
+      /** Drawing text last **/
+      window.draw(manualText);
+      window.draw(autoText);
+      window.draw(groupText);
+      window.draw(ignoreText);
+
+      window.display();
+      EVENTPROCESSED = 0;
+    }
 	}
 
 	return 0;

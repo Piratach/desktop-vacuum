@@ -41,62 +41,28 @@ int main()
 	 * 2. Make a button to find files in the directory */
   int pid;
   int AUTOCLEAN = 0;
-  sf::Color bgColour(56, 59, 62);
-  sf::Font font;
-  sf::Text manualText, autoText, groupText, ignoreText;
-	sf::RenderWindow window(sf::VideoMode(510, 290), "Cleanup",
+	sf::RenderWindow window(sf::VideoMode(510, 290), "Directory Cleanup",
       sf::Style::Default);
-  sf::RectangleShape line(sf::Vector2f(510, 2));
-  line.setFillColor(sf::Color::Black);
-  line.setPosition(0, 0);
-	// sf::RectangleShape rectangle1(sf::Vector2f(100.f, 100.f));
-	// rectangle1.setFillColor(sf::Color::Blue);
-  // rectangle1.setPosition(20, 95);
-	// sf::RectangleShape rectangle2(sf::Vector2f(100.f, 100.f));
-	// rectangle2.setFillColor(sf::Color::Blue);
-  // rectangle2.setPosition(390, 95);
+	sf::RectangleShape rectangle1(sf::Vector2f(100.f, 100.f));
+	rectangle1.setFillColor(sf::Color::Blue);
+  rectangle1.setPosition(20, 95);
+	sf::RectangleShape rectangle2(sf::Vector2f(100.f, 100.f));
+	rectangle2.setFillColor(sf::Color::Blue);
+  rectangle2.setPosition(390, 95);
 
   std::string dirPath = fs::current_path();
 
   CleanupTools cleaner(dirPath);
 
-  // loading font
-  if (!font.loadFromFile("OpenSans-Light.ttf")) {
-    std::cerr << "Error: OpenSans-Light.ttf not found" << std::endl;
-    exit(EXIT_FAILURE);
-  }
-
-  // displaying fonts -- hardcoded
-  manualText.setFont(font);
-  manualText.setString("Manual");
-  manualText.setCharacterSize(16);
-  manualText.setFillColor(sf::Color::White);
-  manualText.setPosition(10, 5);
-
-  autoText.setFont(font);
-  autoText.setString("Auto");
-  autoText.setCharacterSize(16);
-  autoText.setFillColor(sf::Color::White);
-  autoText.setPosition(76, 5);
-
-  groupText.setFont(font);
-  groupText.setString("Groupings");
-  groupText.setCharacterSize(16);
-  groupText.setFillColor(sf::Color::White);
-  groupText.setPosition(120, 5);
-
-  ignoreText.setFont(font);
-  ignoreText.setString("Ignorelist");
-  ignoreText.setCharacterSize(16);
-  ignoreText.setFillColor(sf::Color::White);
-  ignoreText.setPosition(205, 5);
-
-	while (window.isOpen()) {
+	while (window.isOpen())
+	{
 		sf::Event event;
-		while (window.pollEvent(event)) {
+		while (window.pollEvent(event))
+		{
       float x = sf::Mouse::getPosition(window).x;
       float y = sf::Mouse::getPosition(window).y;
-			switch(event.type) {
+			switch(event.type)
+			{
 				case sf::Event::Closed:
           window.close();
           if (AUTOCLEAN) kill(pid, SIGKILL);
@@ -116,24 +82,24 @@ int main()
           // first button
           if (AUTOCLEAN) kill(pid, SIGKILL);
           if (20 <= x && x <= 120 && y >= 95 && y <= 195) {
-            // rectangle1.setFillColor(sf::Color::Red);
-            // rectangle2.setFillColor(sf::Color::Blue);
-            // cleaner.manualCleanup();
+            rectangle1.setFillColor(sf::Color::Red);
+            rectangle2.setFillColor(sf::Color::Blue);
+            cleaner.manualCleanup();
           } else if (390 <= x && x <= 490 && y >= 95 && y <= 195) {
-            // rectangle2.setFillColor(sf::Color::Red);
-            // rectangle1.setFillColor(sf::Color::Blue);
-            // cleaner.revert();
+            rectangle2.setFillColor(sf::Color::Red);
+            rectangle1.setFillColor(sf::Color::Blue);
+            cleaner.revert();
           } else {
-            // if (!AUTOCLEAN) {
-              // rectangle2.setFillColor(sf::Color::Blue);
-              // rectangle1.setFillColor(sf::Color::Blue);
-              // pid = fork();
-              // if (pid == 0) {
-                // cleaner.autoCleanup();
-                // exit(0);
-              // }
-              // AUTOCLEAN = 1;
-            // }
+            if (!AUTOCLEAN) {
+              rectangle2.setFillColor(sf::Color::Blue);
+              rectangle1.setFillColor(sf::Color::Blue);
+              pid = fork();
+              if (pid == 0) {
+                cleaner.autoCleanup();
+                exit(0);
+              }
+              AUTOCLEAN = 1;
+            }
           }
           std::cout << "x: " << x << std::endl;
           std::cout << "y: " << y << std::endl;
@@ -144,14 +110,9 @@ int main()
 			}
 		}
 
-		window.clear(bgColour);
-    window.draw(line);
-		// window.draw(rectangle1);
-		// window.draw(rectangle2);
-    window.draw(manualText);
-    window.draw(autoText);
-    window.draw(groupText);
-    window.draw(ignoreText);
+		window.clear(sf::Color::Black);
+		window.draw(rectangle1);
+		window.draw(rectangle2);
 		window.display();
 	}
 

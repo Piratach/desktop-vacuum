@@ -60,6 +60,7 @@ int Directory::move(std::string oldName, std::string targetDir, int manual) {
   // targetDir taken from extension
   std::string newName = targetDir + "/" + oldName;
   int flag;
+  std::cout << "Attempting to move..." << std::endl;
   // check with a tag to avoid computation
   if (std::filesystem::exists(targetDir)) {
     if (std::filesystem::exists(newName)) {
@@ -69,6 +70,7 @@ int Directory::move(std::string oldName, std::string targetDir, int manual) {
     flag = 1;
   } else {
     std::filesystem::create_directory(targetDir);
+    std::cout << "Created new directory!" << std::endl;
     std::rename(oldName.c_str(), newName.c_str());
     // set tag to true
     flag = 0;
@@ -130,6 +132,7 @@ int Directory::autoClean(void) {
   // we are now casing on number of files to check for renamings
   if (currNumFiles == newNumFiles) {
     // file renamed
+    std::cout << "Renaming" << std::endl;
     dirManager[fileFound] = true;
     removalCheck(); // remove old name from dirManager
     return 0; // kevent not triggered
@@ -137,6 +140,7 @@ int Directory::autoClean(void) {
   // find a better way to do this :(
   } else if (currNumFiles < newNumFiles) {
     // clean up new file
+    std::cout << "Moving new file" << std::endl;
     dirManager[fileFound] = true;
     int flag = cleanFile(fileFound);
     if (flag == -1) {
@@ -152,6 +156,7 @@ int Directory::autoClean(void) {
 
   } else { 
     // file removal
+    std::cout << "Bye bye!" << std::endl;
     if (fileFound != "") {
       std::cerr << "File " << fileFound << " seems to have been removed";
       std::cerr << " but is not." << std::endl;

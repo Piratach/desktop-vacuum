@@ -7,8 +7,10 @@
 
 /*****************************************************************************
  * Interface (look at sfml-practice for reference)
- * TODO: Use Moom's size as reference for how big the window should be
- * TODO: Mac's default "X" button to close window but not the programme running
+ * TODO: Look into .yaml, .xml, .json for storing configs/settings values
+ * TODO: Reading user's input for directory to clean
+ * TODO: Reading user's input for groupings + allow users to scroll if list
+ *       gets long...
  * TODO: Auto, manual/revert button
  * TODO: Settings - with the ability to define groupings
  *                  (e.g. audio - .mid, .mp3, .wav)
@@ -31,32 +33,20 @@
 
 namespace fs = std::filesystem;
 
-// some starter interface.
-// Let's use SFML!
-
-/* Functions to support
- * 1. support most recently opened projects
- * 2. create new project
- * 3. open finder
- * 4. import
- * 5. on selection, rename, delete, run */
-
 int main()
 {
-	/* 1. Find out how to change colour of render window
-	 *		- we want the base to be dark blue colour, not black
-	 * 2. Make a button to find files in the directory */
   int pid;
   int AUTOCLEAN = 0;
   int EVENTPROCESSED = 1;
 
   /* Background Settings */
-  // sf::Color bgColour(56, 59, 62);
-  sf::Color bgColour(38, 45, 58);
+  sf::Color buttonColour(100, 111, 124); // dark grey
+  sf::Color bgColour(38, 45, 58);  // dark blue
 	sf::RenderWindow window(sf::VideoMode(510, 290), "Cleanup",
-      sf::Style::Default);
+      sf::Style::Titlebar | sf::Style::Close);
   window.setVerticalSyncEnabled(true);
   sf::RectangleShape line(sf::Vector2f(510, 2));
+  line.setFillColor(bgColour);
   line.setFillColor(sf::Color::Black);
   line.setPosition(0, 0);
 
@@ -114,12 +104,20 @@ int main()
   autoLine.setFillColor(bgColour);
   autoLine.setPosition(118, 2);
 
+  /** Circular buttons **/
+  sf::CircleShape button(6);
+  button.setFillColor(buttonColour);
+  button.setPosition(20, 40);
+
+  sf::CircleShape buttonIn(3);
+  buttonIn.setFillColor(sf::Color::White);
+  buttonIn.setPosition(23, 43);
+
   /** Cleaner **/
 
   std::string dirPath = fs::current_path();
 
   CleanupTools cleaner(dirPath);
-
 
   /* Event-based rendering */
 	while (window.isOpen()) {
@@ -184,19 +182,25 @@ int main()
 
     if (EVENTPROCESSED) {
       window.clear(bgColour);
-      window.draw(line);
 
       /** Drawing text boxes **/
-      window.draw(divLineL);
-      window.draw(divLineR);
       window.draw(manLine);
       window.draw(autoLine);
+      window.draw(divLineL);
+      window.draw(divLineR);
       
       /** Drawing text last **/
       window.draw(manualText);
       window.draw(autoText);
       window.draw(groupText);
       window.draw(ignoreText);
+
+      /** Buttons **/
+      window.draw(button);
+      window.draw(buttonIn);
+
+      /* line bar at the top last */
+      window.draw(line);
 
       window.display();
       EVENTPROCESSED = 0;

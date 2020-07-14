@@ -32,7 +32,10 @@
 #include <csignal>
 
 // temp includes
-#include "button.hpp"
+#include "circbutton.hpp"
+#include "rectbutton.hpp"
+#include <chrono>
+#include <thread>
 
 namespace fs = std::filesystem;
 
@@ -41,10 +44,12 @@ int main()
   int pid;
   int AUTOCLEAN = 0;
   int EVENTPROCESSED = 1;
+  int MANUALCLEAN = 0;
 
   /* Background Settings */
   sf::Color buttonColour(100, 111, 124); // dark grey
   sf::Color bgColour(38, 45, 58);  // dark blue
+  sf::Color lesserBgColour(50, 60, 70);  // dark blue
 	sf::RenderWindow window(sf::VideoMode(510, 290), "Cleanup",
       sf::Style::Titlebar | sf::Style::Close);
   window.setVerticalSyncEnabled(true);
@@ -108,14 +113,12 @@ int main()
   autoLine.setPosition(118, 2);
 
   /** Circular buttons **/
-  Button button(20, 40, 3, 6, sf::Color::White, buttonColour); 
-  // sf::CircleShape button(6);
-  // button.setFillColor(buttonColour);
-  // button.setPosition(20, 40);
+  CircButton button(20, 40, 3, 6, sf::Color::White, buttonColour); 
 
-  // sf::CircleShape buttonIn(3);
-  // buttonIn.setFillColor(sf::Color::White);
-  // buttonIn.setPosition(23, 43);
+  /** Rectangular buttons */
+  RectButton button2(150, 150, 160, 30, sf::Color(36, 50, 84), 
+      lesserBgColour, "Manual Cleanup",
+      "Cleaning...", font, 14);
 
   /** Cleaner **/
 
@@ -126,6 +129,15 @@ int main()
   /* Event-based rendering */
 	while (window.isOpen()) {
 		sf::Event event;
+
+    if (MANUALCLEAN) {
+      // process shit here
+      std::this_thread::sleep_for(std::chrono::milliseconds(200));
+      button2.finish();
+      MANUALCLEAN = 0;
+      EVENTPROCESSED = 1;
+    }
+
 		while (window.pollEvent(event)) {
 
       EVENTPROCESSED = 1;
@@ -151,6 +163,9 @@ int main()
           // first button
           if (AUTOCLEAN) kill(pid, SIGKILL);
           button.checkPressed(x, y);
+          if (button2.checkPressed(x, y)) {
+            MANUALCLEAN = 1;
+          }
           if (69 <= x && x <= 118 && y >= 0 && y <= 32) {
             // Auto tab
             divLineL.setSize(sf::Vector2f(69, 1));
@@ -202,6 +217,7 @@ int main()
       
       /** Buttons **/
       button.draw(window);
+      button2.draw(window);
       // window.draw(button);
       // window.draw(buttonIn);
 

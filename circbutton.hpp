@@ -1,10 +1,10 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
 
-class Button {
+class CircButton {
   public:
 
-    Button(float x, float y, float inrad, float outrad,
+    CircButton(float x, float y, float inrad, float outrad,
         sf::Color inCol, sf::Color outCol) {
       topLeftX = x;
       topLeftY = y;

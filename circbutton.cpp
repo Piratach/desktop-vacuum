@@ -1,18 +1,16 @@
-#include "button.hpp"
+#include "circbutton.hpp"
 #include <iostream>
 
 /**************************** Public Functions *******************************/
 
-void Button::checkPressed(float x, float y) {
+void CircButton::checkPressed(float x, float y) {
   float value = pow((x - centreX), 2) + pow((y - centreY), 2); 
-  std::cout << value << std::endl;
   if (value <= pow(outerRad, 2)) {
-    std::cout << "Pressed!" << std::endl;
     pressed = not pressed;
   }
 }
 
-void Button::draw(sf::RenderWindow &window) {
+void CircButton::draw(sf::RenderWindow &window) {
   if (pressed) {
     window.draw(outerButton);
     window.draw(innerButton);
@@ -24,7 +22,7 @@ void Button::draw(sf::RenderWindow &window) {
 /**************************** Private Functions ******************************/
 
 // basically creates the circles
-void Button::init(void) {
+void CircButton::init(void) {
 
   centreX = topLeftX + outerRad;
   centreY = topLeftY + outerRad;

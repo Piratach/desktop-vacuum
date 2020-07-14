@@ -31,6 +31,9 @@
 #include <SFML/Graphics.hpp>
 #include <csignal>
 
+// temp includes
+#include "button.hpp"
+
 namespace fs = std::filesystem;
 
 int main()
@@ -105,13 +108,14 @@ int main()
   autoLine.setPosition(118, 2);
 
   /** Circular buttons **/
-  sf::CircleShape button(6);
-  button.setFillColor(buttonColour);
-  button.setPosition(20, 40);
+  Button button(20, 40, 3, 6, sf::Color::White, buttonColour); 
+  // sf::CircleShape button(6);
+  // button.setFillColor(buttonColour);
+  // button.setPosition(20, 40);
 
-  sf::CircleShape buttonIn(3);
-  buttonIn.setFillColor(sf::Color::White);
-  buttonIn.setPosition(23, 43);
+  // sf::CircleShape buttonIn(3);
+  // buttonIn.setFillColor(sf::Color::White);
+  // buttonIn.setPosition(23, 43);
 
   /** Cleaner **/
 
@@ -146,6 +150,7 @@ int main()
         case sf::Event::MouseButtonPressed:
           // first button
           if (AUTOCLEAN) kill(pid, SIGKILL);
+          button.checkPressed(x, y);
           if (69 <= x && x <= 118 && y >= 0 && y <= 32) {
             // Auto tab
             divLineL.setSize(sf::Vector2f(69, 1));
@@ -183,21 +188,22 @@ int main()
     if (EVENTPROCESSED) {
       window.clear(bgColour);
 
+      /** Drawing text first **/
+      window.draw(manualText);
+      window.draw(autoText);
+      window.draw(groupText);
+      window.draw(ignoreText);
+
       /** Drawing text boxes **/
       window.draw(manLine);
       window.draw(autoLine);
       window.draw(divLineL);
       window.draw(divLineR);
       
-      /** Drawing text last **/
-      window.draw(manualText);
-      window.draw(autoText);
-      window.draw(groupText);
-      window.draw(ignoreText);
-
       /** Buttons **/
-      window.draw(button);
-      window.draw(buttonIn);
+      button.draw(window);
+      // window.draw(button);
+      // window.draw(buttonIn);
 
       /* line bar at the top last */
       window.draw(line);

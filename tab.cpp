@@ -10,9 +10,8 @@ bool Tab::checkPressed(float x, float y) {
 }
 
 void Tab::update(float x, float y) {
-  for (auto button : circButtonArray) {
+  for (auto& button : circButtonArray) {
     if (button.checkPressed(x, y)) {
-      std::cout << "Button pressed!" << std::endl;
       // there can only be one event each loop
       // logic is processed within checkPressed
       break;

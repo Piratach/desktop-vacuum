@@ -3,11 +3,14 @@
 
 /**************************** Public Functions *******************************/
 
-void CircButton::checkPressed(float x, float y) {
+bool CircButton::checkPressed(float x, float y) {
   float value = pow((x - centreX), 2) + pow((y - centreY), 2); 
   if (value <= pow(outerRad, 2)) {
+    changed = true;
     pressed = not pressed;
+    return true;
   }
+  return false;
 }
 
 void CircButton::draw(sf::RenderWindow &window) {
@@ -35,4 +38,8 @@ void CircButton::init(void) {
   outerButton.setPosition(topLeftX, topLeftY);
 
   pressed = false; // depends on saved configs
+}
+
+// incomplete
+void CircButton::writeChanges(std::string filename) {
 }

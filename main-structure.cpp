@@ -86,7 +86,6 @@ int main() {
             case MANUAL:
               // perform various checks
               // can only have one event at once so if else if else pls
-              // UI.getMode(&mode); // checking for mode changes
               // UI.updateManTab(); // other checks
               //
               // else:

@@ -1,7 +1,7 @@
 all: main 
 
-main: main.o cleanuptools.o directory.o circbutton.o rectbutton.o
-	g++ -std=c++17 main.o cleanuptools.o directory.o circbutton.o rectbutton.o -o main -lstdc++ -lsfml-graphics -lsfml-window -lsfml-system
+main: main.o cleanuptools.o directory.o circbutton.o rectbutton.o tab.o
+	g++ -std=c++17 main.o cleanuptools.o directory.o circbutton.o rectbutton.o tab.o -o main -lstdc++ -lsfml-graphics -lsfml-window -lsfml-system
 	rm -r *.o
 
 main.o: main.cpp
@@ -18,6 +18,9 @@ rectbutton.o: rectbutton.cpp rectbutton.hpp
 
 circbutton.o: circbutton.hpp circbutton.cpp
 	g++ -std=c++17 -c circbutton.cpp
+
+tab.o: tab.hpp tab.cpp
+	g++ -std=c++17 -c tab.cpp
 
 clean:
 	rm -rf main *.o

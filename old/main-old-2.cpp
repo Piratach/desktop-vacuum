@@ -30,11 +30,10 @@
 #include "cleanuptools.hpp"
 #include <SFML/Graphics.hpp>
 #include <csignal>
-#include <string>
 
 // temp includes
+#include "circbutton.hpp"
 #include "rectbutton.hpp"
-#include "tab.hpp"
 #include <chrono>
 #include <thread>
 
@@ -46,18 +45,6 @@ int main()
   int AUTOCLEAN = 0;
   int EVENTPROCESSED = 1;
   int MANUALCLEAN = 0;
-
-  const int MANUAL = 0;
-  const int AUTO = 1;
-
-  /* Temp variables */
-  Tab manualTab(MANUAL, 0, 0, 69, 32);
-  manualTab.loadConfig("ok");
-  Tab autoTab(AUTO, 69, 0, 49, 32);
-  autoTab.loadConfig("");
-
-  bool isManual = true;
-  bool isAuto = false;
 
   /* Background Settings */
   sf::Color buttonColour(100, 111, 124); // dark grey
@@ -115,6 +102,19 @@ int main()
   divLineR.setPosition(69, 31);
   divLineR.setFillColor(sf::Color::White);
 
+  sf::RectangleShape manLine(sf::Vector2f(30, 1));
+  manLine.rotate(90);
+  manLine.setFillColor(sf::Color::White);
+  manLine.setPosition(69, 2);
+
+  sf::RectangleShape autoLine(sf::Vector2f(30, 1));
+  autoLine.rotate(90);
+  autoLine.setFillColor(bgColour);
+  autoLine.setPosition(118, 2);
+
+  /** Circular buttons **/
+  CircButton button(20, 40, 3, 6, sf::Color::White, buttonColour); 
+
   /** Rectangular buttons */
   RectButton button2(150, 150, 160, 30, sf::Color(36, 50, 84), 
       lesserBgColour, "Manual Cleanup",
@@ -140,6 +140,8 @@ int main()
 
 		while (window.pollEvent(event)) {
 
+
+      EVENTPROCESSED = 1;
       float x = sf::Mouse::getPosition(window).x;
       float y = sf::Mouse::getPosition(window).y;
 			switch(event.type) {
@@ -159,37 +161,41 @@ int main()
           // cleaner.revert();
 					break;
 
-        case sf::Event::MouseButtonPressed: {
+        case sf::Event::MouseButtonPressed:
           // first button
-          EVENTPROCESSED = 1;
           if (AUTOCLEAN) kill(pid, SIGKILL);
+          button.checkPressed(x, y);
           if (button2.checkPressed(x, y)) {
             MANUALCLEAN = 1;
           }
-          if (manualTab.checkPressed(x, y)) {
-            isManual = true;
-            isAuto = false;
-            divLineL.setSize(sf::Vector2f(0, 0));
-            divLineR.setPosition(69, 31);
-            divLineR.setSize(sf::Vector2f(441, 1));
-          } else if (autoTab.checkPressed(x, y)) {
-            isManual = false;
-            isAuto = true;
+          if (69 <= x && x <= 118 && y >= 0 && y <= 32) {
+            // Auto tab
             divLineL.setSize(sf::Vector2f(69, 1));
             divLineR.setPosition(118, 31);
             divLineR.setSize(sf::Vector2f(392, 1));
+            autoLine.setFillColor(sf::Color::White);
+
+            // cleaner.manualCleanup();
+          } else if (390 <= x && x <= 490 && y >= 95 && y <= 195) {
+            // cleaner.revert();
           } else {
-            // no tab changes
-            if (isManual) {
-              manualTab.update(x, y);
-            } else if (isAuto) {
-              autoTab.update(x, y);
-            }
+            // Manual tab
+            divLineL.setSize(sf::Vector2f(0, 0));
+            divLineR.setPosition(69, 31);
+            divLineR.setSize(sf::Vector2f(441, 1));
+            autoLine.setFillColor(bgColour);
+            // if (!AUTOCLEAN) {
+              // pid = fork();
+              // if (pid == 0) {
+                // cleaner.autoCleanup();
+                // exit(0);
+              // }
+              // AUTOCLEAN = 1;
+            // }
           }
           std::cout << "x: " << x << std::endl;
           std::cout << "y: " << y << std::endl;
           break;
-        }
 
 				default:
 					break;
@@ -206,16 +212,13 @@ int main()
       window.draw(ignoreText);
 
       /** Drawing text boxes **/
-      if (isManual) {
-        manualTab.draw(window);
-      } else if (isAuto) {
-        autoTab.draw(window);
-      }
-
+      window.draw(manLine);
+      window.draw(autoLine);
       window.draw(divLineL);
       window.draw(divLineR);
       
       /** Buttons **/
+      button.draw(window);
       button2.draw(window);
       // window.draw(button);
       // window.draw(buttonIn);

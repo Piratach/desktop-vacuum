@@ -55,9 +55,38 @@ int Tab::loadConfig(std::string filename) {
       rightTabLine.setFillColor(sf::Color::White);
       rightTabLine.setPosition(69, 2);
 
-      CircButton button1(20, 40, 3, 6, sf::Color::White, 
-          sf::Color(100, 111, 124)); 
+      /** For future updates **/
+      sf::Text text1("Cleaning :", font, 16);
+      text1.setFillColor(sf::Color::White);
+      text1.setPosition(25, 52);
+      textArray.push_back(text1);
+
+      std::string cwd = std::filesystem::current_path();
+      if (cwd.length() >= 55) cwd = dirNameOnly(cwd); // check 55 again...
+      sf::Text text2(cwd, font, 16);
+      text2.setFillColor(sf::Color::White);
+      text2.setPosition(97, 52);
+      textArray.push_back(text2);
+
+      /** Settings **/
+
+      CircButton button1(25, 93, 3, 6, sf::Color::White, 
+          sf::Color(100, 111, 124), true); 
       circButtonArray.push_back(button1);
+
+      sf::Text text3("Ignore extensions not in groupings", font, 16);
+      text3.setFillColor(sf::Color::White);
+      text3.setPosition(55, 88);
+      textArray.push_back(text3);
+
+      CircButton button2(25, 129, 3, 6, sf::Color::White, 
+          sf::Color(100, 111, 124), true); 
+      circButtonArray.push_back(button2);
+
+      sf::Text text4("Use ignorelist", font, 16);
+      text4.setFillColor(sf::Color::White);
+      text4.setPosition(55, 124);
+      textArray.push_back(text4);
 
       break; 
     }

@@ -1,4 +1,17 @@
 #include "circbutton.hpp"
+#include <filesystem>
+
+inline std::string dirNameOnly(std::string s) {
+  int len = 0;
+  for (int i = s.size() - 1; i >= 0; i--) {
+    if (std::isspace(s[i])) continue;
+    else if (s[i] == '/') {
+      return s.substr(i+1, len+1);
+    }
+    len++;
+  }
+  return "";
+}
 
 // Tab functions like a button but is not actually one...
 // Tab class will deal with all the tab switching completely EXCEPT for 
@@ -7,12 +20,13 @@
 class Tab {
   public:
 
-    Tab (int tabMode, float x, float y, float w, float h) {
+    Tab (int tabMode, float x, float y, float w, float h, sf::Font f) {
       mode = tabMode;
       topLeftX = x;
       topLeftY = y;
       width = w;
       height = h;
+      font = f;
     }
 
     // this will get called from scene.cpp - more explicit this way
@@ -38,6 +52,9 @@ class Tab {
     int mode; // 0, 1, 2, 3 - identifies which mode this tab is assigned to
     float topLeftX, topLeftY, width, height;
     sf::RectangleShape leftTabLine, rightTabLine;
+
+    // font
+    sf::Font font;
 
     // array of circular buttons
     // array of text lines

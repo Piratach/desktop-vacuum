@@ -5,7 +5,7 @@
 
 bool CircButton::checkPressed(float x, float y) {
   float value = pow((x - centreX), 2) + pow((y - centreY), 2); 
-  if (value <= pow(outerRad, 2)) {
+  if (value <= pow(outerRad + 3, 2)) { // a bit outside circle OK
     changed = true;
     pressed = not pressed;
     return true;
@@ -36,8 +36,6 @@ void CircButton::init(void) {
   outerButton.setRadius(outerRad);
   outerButton.setFillColor(outerCol);
   outerButton.setPosition(topLeftX, topLeftY);
-
-  pressed = false; // depends on saved configs
 }
 
 // incomplete

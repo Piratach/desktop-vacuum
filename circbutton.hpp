@@ -5,7 +5,7 @@ class CircButton {
   public:
 
     CircButton(float x, float y, float inrad, float outrad,
-        sf::Color inCol, sf::Color outCol) {
+        sf::Color inCol, sf::Color outCol, bool on) {
       topLeftX = x;
       topLeftY = y;
       outerRad = outrad;
@@ -13,6 +13,8 @@ class CircButton {
       innerRad = inrad;
       innerCol = inCol;
       changed = false;
+      pressed = on;
+
       init();
     }
 

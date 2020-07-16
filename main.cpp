@@ -50,10 +50,20 @@ int main()
   const int MANUAL = 0;
   const int AUTO = 1;
 
+  /* Text */
+  sf::Font font;
+  sf::Text manualText, autoText, groupText, ignoreText;
+
+  // loading font
+  if (!font.loadFromFile("OpenSans-Light.ttf")) {
+    std::cerr << "Error: OpenSans-Light.ttf not found." << std::endl;
+    exit(EXIT_FAILURE);
+  }
+
   /* Temp variables */
-  Tab manualTab(MANUAL, 0, 0, 69, 32);
+  Tab manualTab(MANUAL, 0, 0, 69, 32, font);
   manualTab.loadConfig("ok");
-  Tab autoTab(AUTO, 69, 0, 49, 32);
+  Tab autoTab(AUTO, 69, 0, 49, 32, font);
   autoTab.loadConfig("");
 
   bool isManual = true;
@@ -64,22 +74,12 @@ int main()
   sf::Color bgColour(38, 45, 58);  // dark blue
   sf::Color lesserBgColour(50, 60, 70);  // dark blue
 	sf::RenderWindow window(sf::VideoMode(510, 290), "Cleanup",
-      sf::Style::Titlebar | sf::Style::Close);
+      sf::Style::Titlebar | sf::Style::Close); // default
   window.setVerticalSyncEnabled(true);
   sf::RectangleShape line(sf::Vector2f(510, 2));
   line.setFillColor(bgColour);
   line.setFillColor(sf::Color::Black);
   line.setPosition(0, 0);
-
-  /* Text */
-  sf::Font font;
-  sf::Text manualText, autoText, groupText, ignoreText;
-
-  // loading font
-  if (!font.loadFromFile("OpenSans-Light.ttf")) {
-    std::cerr << "Error: OpenSans-Light.ttf not found." << std::endl;
-    exit(EXIT_FAILURE);
-  }
 
   // displaying fonts -- hardcoded
   manualText.setFont(font);
@@ -116,7 +116,7 @@ int main()
   divLineR.setFillColor(sf::Color::White);
 
   /** Rectangular buttons */
-  RectButton button2(150, 150, 160, 30, sf::Color(36, 50, 84), 
+  RectButton manualButton(150, 240, 160, 30, sf::Color(36, 50, 84), 
       lesserBgColour, "Manual Cleanup",
       "Cleaning...", font, 14);
 
@@ -132,8 +132,8 @@ int main()
 
     if (MANUALCLEAN) {
       // process shit here
-      std::this_thread::sleep_for(std::chrono::milliseconds(200));
-      button2.finish();
+      std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+      manualButton.finish();
       MANUALCLEAN = 0;
       EVENTPROCESSED = 1;
     }
@@ -163,7 +163,7 @@ int main()
           // first button
           EVENTPROCESSED = 1;
           if (AUTOCLEAN) kill(pid, SIGKILL);
-          if (button2.checkPressed(x, y)) {
+          if (manualButton.checkPressed(x, y)) {
             MANUALCLEAN = 1;
           }
           if (manualTab.checkPressed(x, y)) {
@@ -208,6 +208,7 @@ int main()
       /** Drawing text boxes **/
       if (isManual) {
         manualTab.draw(window);
+        manualButton.draw(window);
       } else if (isAuto) {
         autoTab.draw(window);
       }
@@ -215,11 +216,6 @@ int main()
       window.draw(divLineL);
       window.draw(divLineR);
       
-      /** Buttons **/
-      button2.draw(window);
-      // window.draw(button);
-      // window.draw(buttonIn);
-
       /* line bar at the top last */
       window.draw(line);
 

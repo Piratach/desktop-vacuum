@@ -49,6 +49,11 @@ int main()
 
   const int MANUAL = 0;
   const int AUTO = 1;
+  const int GROUPINGS = 2;
+  const int IGNORE = 3;
+
+  int width = 510;
+  int height = 290;
 
   /* Text */
   sf::Font font;
@@ -65,18 +70,21 @@ int main()
   manualTab.loadConfig("ok");
   Tab autoTab(AUTO, 69, 0, 49, 32, font);
   autoTab.loadConfig("");
+  Tab grpTab(GROUPINGS, 118, 0, 87, 32, font);
+  grpTab.loadConfig("");
+  Tab ignTab(IGNORE, 205, 0, 79, 32, font);
+  ignTab.loadConfig("");
 
-  bool isManual = true;
-  bool isAuto = false;
+  int mode = MANUAL;
 
   /* Background Settings */
   sf::Color buttonColour(100, 111, 124); // dark grey
   sf::Color bgColour(38, 45, 58);  // dark blue
   sf::Color lesserBgColour(50, 60, 70);  // dark blue
-	sf::RenderWindow window(sf::VideoMode(510, 290), "Cleanup",
+	sf::RenderWindow window(sf::VideoMode(width, height), "Cleanup",
       sf::Style::Titlebar | sf::Style::Close); // default
   window.setVerticalSyncEnabled(true);
-  sf::RectangleShape line(sf::Vector2f(510, 2));
+  sf::RectangleShape line(sf::Vector2f(width, 2));
   line.setFillColor(bgColour);
   line.setFillColor(sf::Color::Black);
   line.setPosition(0, 0);
@@ -111,14 +119,22 @@ int main()
   divLineL.setPosition(0, 31);
   divLineL.setFillColor(sf::Color::White);
 
-  sf::RectangleShape divLineR(sf::Vector2f(441, 1));
-  divLineR.setPosition(69, 31);
+  sf::RectangleShape divLineR(sf::Vector2f(width - manualTab.right, 1));
+  divLineR.setPosition(manualTab.right, 31);
   divLineR.setFillColor(sf::Color::White);
 
   /** Rectangular buttons */
-  RectButton manualButton(150, 240, 160, 30, sf::Color(36, 50, 84), 
+  RectButton manualButton(40, 240, 160, 30, sf::Color(36, 50, 84), 
       lesserBgColour, "Manual Cleanup",
       "Cleaning...", font, 14);
+
+  RectButton revertButton(width - 200, 240, 160, 30, sf::Color(36, 50, 84), 
+      lesserBgColour, "Revert",
+      "Reverting...", font, 14);
+
+  RectButton autoButton(width/2 - 84, 240, 160, 30, sf::Color(36, 50, 84), 
+      lesserBgColour, "Auto Cleanup",
+      "Active", font, 14);
 
   /** Cleaner **/
 
@@ -149,16 +165,6 @@ int main()
           if (AUTOCLEAN) kill(pid, SIGKILL);
 					break;
 
-				case sf::Event::LostFocus:
-					// rectangle1.setFillColor(sf::Color::Red);
-          // cleaner.manualCleanup();
-					break;
-
-				case sf::Event::GainedFocus:
-					// rectangle1.setFillColor(sf::Color::Blue);
-          // cleaner.revert();
-					break;
-
         case sf::Event::MouseButtonPressed: {
           // first button
           EVENTPROCESSED = 1;
@@ -166,29 +172,51 @@ int main()
           if (manualButton.checkPressed(x, y)) {
             MANUALCLEAN = 1;
           }
+
           if (manualTab.checkPressed(x, y)) {
-            isManual = true;
-            isAuto = false;
+            mode = MANUAL;
             divLineL.setSize(sf::Vector2f(0, 0));
-            divLineR.setPosition(69, 31);
-            divLineR.setSize(sf::Vector2f(441, 1));
+            divLineR.setPosition(manualTab.right, 31);
+            divLineR.setSize(sf::Vector2f(width - manualTab.right, 1));
           } else if (autoTab.checkPressed(x, y)) {
-            isManual = false;
-            isAuto = true;
-            divLineL.setSize(sf::Vector2f(69, 1));
-            divLineR.setPosition(118, 31);
-            divLineR.setSize(sf::Vector2f(392, 1));
+            mode = AUTO;
+            divLineL.setSize(sf::Vector2f(autoTab.left, 1));
+            divLineR.setSize(sf::Vector2f(width - autoTab.right, 1));
+            divLineR.setPosition(autoTab.right, 31);
+          } else if (grpTab.checkPressed(x, y)) {
+            mode = GROUPINGS;
+            divLineL.setSize(sf::Vector2f(grpTab.left, 1));
+            divLineR.setSize(sf::Vector2f(width - grpTab.right, 1));
+            divLineR.setPosition(grpTab.right, 31);
+          } else if (ignTab.checkPressed(x, y)) {
+            mode = IGNORE;
+            divLineL.setSize(sf::Vector2f(ignTab.left, 1));
+            divLineR.setSize(sf::Vector2f(width - ignTab.right, 1));
+            divLineR.setPosition(ignTab.right, 31);
           } else {
             // no tab changes
-            if (isManual) {
+            switch(mode) {
+
+            case MANUAL:
               manualTab.update(x, y);
-            } else if (isAuto) {
+              break;
+
+            case AUTO:
               autoTab.update(x, y);
+              break;
+
+            case GROUPINGS:
+              grpTab.update(x, y);
+              break;
+
+            case IGNORE:
+              ignTab.update(x, y);
+              break;
             }
-          }
           std::cout << "x: " << x << std::endl;
           std::cout << "y: " << y << std::endl;
           break;
+          }
         }
 
 				default:
@@ -206,11 +234,26 @@ int main()
       window.draw(ignoreText);
 
       /** Drawing text boxes **/
-      if (isManual) {
+      switch(mode) {
+
+      case MANUAL:
         manualTab.draw(window);
         manualButton.draw(window);
-      } else if (isAuto) {
+        revertButton.draw(window);
+        break;
+
+      case AUTO:
         autoTab.draw(window);
+        autoButton.draw(window);
+        break;
+
+      case GROUPINGS:
+        grpTab.draw(window);
+        break;
+
+      case IGNORE:
+        ignTab.draw(window);
+        break;
       }
 
       window.draw(divLineL);

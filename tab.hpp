@@ -48,6 +48,9 @@ class Tab {
     // basically calls writeChanges for all the buttons 
     void writeChanges(void);
 
+    /* Public variables */
+    float left, right;
+
   private:
     int mode; // 0, 1, 2, 3 - identifies which mode this tab is assigned to
     float topLeftX, topLeftY, width, height;

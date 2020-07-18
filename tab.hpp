@@ -1,18 +1,6 @@
 #include "circbutton.hpp"
 #include <filesystem>
 
-inline std::string dirNameOnly(std::string s) {
-  int len = 0;
-  for (int i = s.size() - 1; i >= 0; i--) {
-    if (std::isspace(s[i])) continue;
-    else if (s[i] == '/') {
-      return s.substr(i+1, len+1);
-    }
-    len++;
-  }
-  return "";
-}
-
 // Tab functions like a button but is not actually one...
 // Tab class will deal with all the tab switching completely EXCEPT for 
 // the left and right horizontal lines governing the tabs
@@ -20,13 +8,8 @@ inline std::string dirNameOnly(std::string s) {
 class Tab {
   public:
 
-    Tab (int tabMode, float x, float y, float w, float h, sf::Font f) {
+    Tab (int tabMode) {
       mode = tabMode;
-      topLeftX = x;
-      topLeftY = y;
-      width = w;
-      height = h;
-      font = f;
     }
 
     // this will get called from scene.cpp - more explicit this way
@@ -66,4 +49,15 @@ class Tab {
 
     std::string xmlFilename;
 
+    inline std::string dirNameOnly(std::string s) {
+      int len = 0;
+      for (int i = s.size() - 1; i >= 0; i--) {
+        if (std::isspace(s[i])) continue;
+        else if (s[i] == '/') {
+          return s.substr(i+1, len+1);
+        }
+        len++;
+      }
+      return "";
+    }
 };

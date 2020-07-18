@@ -66,13 +66,17 @@ int main()
   }
 
   /* Temp variables */
-  Tab manualTab(MANUAL, 0, 0, 69, 32, font);
+  // Tab manualTab(MANUAL, 0, 0, 69, 32, font);
+  Tab manualTab(MANUAL);
   manualTab.loadConfig("ok");
-  Tab autoTab(AUTO, 69, 0, 49, 32, font);
+  // Tab autoTab(AUTO, 69, 0, 49, 32, font);
+  Tab autoTab(AUTO);
   autoTab.loadConfig("");
-  Tab grpTab(GROUPINGS, 118, 0, 87, 32, font);
+  // Tab grpTab(GROUPINGS, 118, 0, 87, 32, font);
+  Tab grpTab(GROUPINGS);
   grpTab.loadConfig("");
-  Tab ignTab(IGNORE, 205, 0, 79, 32, font);
+  // Tab ignTab(IGNORE, 205, 0, 79, 32, font);
+  Tab ignTab(IGNORE);
   ignTab.loadConfig("");
 
   int mode = MANUAL;
@@ -132,7 +136,7 @@ int main()
       lesserBgColour, "Revert",
       "Reverting...", font, 14);
 
-  RectButton autoButton(width/2 - 84, 240, 160, 30, sf::Color(36, 50, 84), 
+  RectButton autoButton(width/2 - 86, 240, 160, 30, sf::Color(36, 50, 84), 
       lesserBgColour, "Auto Cleanup",
       "Active", font, 14);
 

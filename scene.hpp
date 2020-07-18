@@ -8,19 +8,19 @@ enum TabMode {
   IGNORELST
 };
 
+// scene contains tabs, clean/revert buttons, and other shapes that are 
+// to be displayed across all tabs
+
 class Scene {
   public:
     void redrawAll(sf::RenderWindow &window);
-    void updateManTab(float x, float y);
-    void updateAutoTab(float x, float y);
-    void updateGrpTab(float x, float y);
-    void updateIgnTab(float x, float y);
+    void updateAll(float x, float y);
 
-    void getMode(int &mode);
+    void getMode(TabMode &mode);
 
   private:
-    // init to be 0
-    TabMode mode; // restricted to 0 for manual, 1 for auto, ...
+
+    TabMode mode; 
 
     // don't need an array for this, just check all cases. A bit more tedious,
     // but it will be clearer
@@ -28,5 +28,14 @@ class Scene {
 
     // for all the "function buttons"
     RectButton manualButton, revertButton, autoButton;
+
+    // for all the tab names
+    std::vector<sf::Text> tabNameArray;
+
+    // for the horizontal lines below the tabs
+    sf::RectangleShape tabLineL, tabLineR;
+
+    // dark line on top
+    sf::RectangleShape upperTabLine;
 
 };

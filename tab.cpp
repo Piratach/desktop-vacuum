@@ -46,10 +46,21 @@ void Tab::writeChanges(void) {
 int Tab::loadConfig(std::string filename) {
   xmlFilename = filename; // will have to load and get info later
 
+  // loading font
+  if (!font.loadFromFile("OpenSans-Light.ttf")) {
+    std::cerr << "Error: OpenSans-Light.ttf not found." << std::endl;
+    exit(EXIT_FAILURE);
+  }
+
   switch (mode) {
 
     /* Manual tab! */
     case 0: {
+      topLeftX = 0;
+      topLeftY = 0;
+      width = 69;
+      height = 32;
+
       rightTabLine.setSize(sf::Vector2f(30, 1));
       rightTabLine.rotate(90);
       rightTabLine.setFillColor(sf::Color::White);
@@ -96,6 +107,11 @@ int Tab::loadConfig(std::string filename) {
 
     /* Auto tab! */
     case 1: {
+      topLeftX = 69;
+      topLeftY = 0;
+      width = 49;
+      height = 32;
+
       leftTabLine.setSize(sf::Vector2f(30, 1));
       leftTabLine.rotate(90);
       leftTabLine.setFillColor(sf::Color::White);
@@ -157,6 +173,11 @@ int Tab::loadConfig(std::string filename) {
 
     /* Groupings tab! */
     case 2: {
+      topLeftX = 118;
+      topLeftY = 0;
+      width = 87;
+      height = 32;
+
       leftTabLine.setSize(sf::Vector2f(30, 1));
       leftTabLine.rotate(90);
       leftTabLine.setFillColor(sf::Color::White);
@@ -175,6 +196,11 @@ int Tab::loadConfig(std::string filename) {
 
     /* Ignorelist tab! */
     case 3: {
+      topLeftX = 205;
+      topLeftY = 0;
+      width = 79;
+      height = 32;
+
       leftTabLine.setSize(sf::Vector2f(30, 1));
       leftTabLine.rotate(90);
       leftTabLine.setFillColor(sf::Color::White);

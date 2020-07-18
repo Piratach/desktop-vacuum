@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
 
-// this class will be used directly in main.cpp because the things it 
+// this class will be used directly in scene.cpp because the things it 
 // does are so important
 
 class RectButton {

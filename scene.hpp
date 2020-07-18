@@ -1,8 +1,16 @@
-#include "tab.hpp"  // ignore dumb arse warning for now
+#include "tab.hpp" // no rect button
+#include "rectbutton.hpp" 
+
+enum TabMode {
+  MANUAL,
+  AUTO,
+  GROUPINGS,
+  IGNORELST
+};
 
 class Scene {
   public:
-    void redrawAll(void);
+    void redrawAll(sf::RenderWindow &window);
     void updateManTab(float x, float y);
     void updateAutoTab(float x, float y);
     void updateGrpTab(float x, float y);
@@ -12,10 +20,13 @@ class Scene {
 
   private:
     // init to be 0
-    int mode; // restricted to 0 for manual, 1 for auto, ...
+    TabMode mode; // restricted to 0 for manual, 1 for auto, ...
 
     // don't need an array for this, just check all cases. A bit more tedious,
     // but it will be clearer
     Tab manualTab, autoTab, grpTab, ignTab;
+
+    // for all the "function buttons"
+    RectButton manualButton, revertButton, autoButton;
 
 };

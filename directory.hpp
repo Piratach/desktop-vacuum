@@ -37,11 +37,7 @@ class Directory {
   public:
 
     /** Constructor for Directory Class **/
-    Directory(std::string path) : mapFileName(".map.txt"), 
-                                  saveFileName(".save.txt") 
-    {
-      dirPath = path;
-    };
+    Directory(std::string path);
 
     /** Revert Mode for Manual-Cleanup **/
     void revert(void);

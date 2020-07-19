@@ -7,6 +7,13 @@
 
 /**************************** Public Functions *******************************/
 
+// ctor
+Directory::Directory(std::string path) : mapFileName(".map.txt"), 
+                              saveFileName(".save.txt") 
+{
+  dirPath = path;
+};
+
 // Reverts changes made by Manual-Cleanup by checking the writes made 
 // in .save.txt. 
 void Directory::revert(void) {

@@ -8,6 +8,11 @@
 
 #include "cleanuptools.hpp"
 
+CleanupTools::CleanupTools (std::string dirName) : currDir(dirName) {
+  dirPath = dirName;
+};
+
+
 int CleanupTools::initCurrDir(std::string dirName) {
   if (std::filesystem::exists(dirName)) {
     std::cout << "Directory " << dirName;

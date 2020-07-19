@@ -8,15 +8,7 @@ class Scene {
 
   public:
 
-    Scene()
-      : manualTab(MANUAL)
-      , autoTab(AUTO)
-      , grpTab(GROUPINGS)
-      , ignTab(IGNORELST)
-      , manualButton()
-      , revertButton()
-      , autoButton()
-    {}
+    Scene();
 
     void redrawAll(sf::RenderWindow &window);
     void updateAll(float x, float y, int &MANUALCLEAN, 

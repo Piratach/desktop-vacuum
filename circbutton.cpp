@@ -3,6 +3,22 @@
 
 /**************************** Public Functions *******************************/
 
+// ctor
+CircButton::CircButton(float x, float y, float inrad, float outrad,
+        sf::Color inCol, sf::Color outCol, bool on) {
+  topLeftX = x;
+  topLeftY = y;
+  outerRad = outrad;
+  outerCol = outCol;
+  innerRad = inrad;
+  innerCol = inCol;
+  changed = false;
+  pressed = on;
+
+  init();
+}
+
+
 bool CircButton::checkPressed(float x, float y) {
   float value = pow((x - centreX), 2) + pow((y - centreY), 2); 
   if (value <= pow(outerRad + 3, 2)) { // a bit outside circle OK

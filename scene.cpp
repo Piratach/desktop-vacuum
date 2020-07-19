@@ -1,5 +1,16 @@
 #include "scene.hpp"
 
+// ctor
+Scene::Scene()
+  : manualTab(MANUAL)
+  , autoTab(AUTO)
+  , grpTab(GROUPINGS)
+  , ignTab(IGNORELST)
+  , manualButton()
+  , revertButton()
+  , autoButton()
+{}
+
 void Scene::redrawAll(sf::RenderWindow &window) {
 
   /* Lines common in all tabs */
@@ -178,7 +189,7 @@ void Scene::loadConfig(void) {
       "Cleaning...", font, 14);
 
   revertButton.setAttr(width - 200, 240, 160, 30, sf::Color(36, 50, 84), 
-      lesserBgColour, "Revert",
+      lesserBgColour, "Revert Changes",
       "Reverting...", font, 14);
 
   autoButton.setAttr(width/2 - 86, 240, 160, 30, sf::Color(36, 50, 84), 

@@ -4,19 +4,9 @@
 class CircButton {
   public:
 
+    // ctor
     CircButton(float x, float y, float inrad, float outrad,
-        sf::Color inCol, sf::Color outCol, bool on) {
-      topLeftX = x;
-      topLeftY = y;
-      outerRad = outrad;
-      outerCol = outCol;
-      innerRad = inrad;
-      innerCol = inCol;
-      changed = false;
-      pressed = on;
-
-      init();
-    }
+        sf::Color inCol, sf::Color outCol, bool on);
 
     // seriously only checks whether it is pressed or not
     bool checkPressed(float x, float y);

@@ -20,9 +20,7 @@ class CleanupTools {
 
   public:
 
-    CleanupTools (std::string dirName) : currDir(dirName) {
-      dirPath = dirName;
-    };
+    CleanupTools (std::string dirName);
 
     int manualCleanup(void);
     int revert(void);

@@ -16,9 +16,7 @@ enum TabMode {
 class Tab {
   public:
 
-    Tab (TabMode m) {
-      mode = m;
-    }
+    Tab (TabMode m);
 
     // this will get called from scene.cpp - more explicit this way
     // will also set xmlFilename variable in this function

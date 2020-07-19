@@ -1,6 +1,10 @@
 #include "tab.hpp"
 #include <iostream>
 
+Tab::Tab (TabMode m) {
+  mode = m;
+}
+
 bool Tab::checkPressed(float x, float y) {
   if (topLeftX <= x && x <= topLeftX + width && 
       topLeftY <= y && y <= topLeftY + height) {

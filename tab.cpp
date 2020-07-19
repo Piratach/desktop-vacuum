@@ -55,7 +55,7 @@ int Tab::loadConfig(std::string filename) {
   switch (mode) {
 
     /* Manual tab! */
-    case 0: {
+    case MANUAL: {
       topLeftX = 0;
       topLeftY = 0;
       width = 69;
@@ -106,7 +106,7 @@ int Tab::loadConfig(std::string filename) {
     }
 
     /* Auto tab! */
-    case 1: {
+    case AUTO: {
       topLeftX = 69;
       topLeftY = 0;
       width = 49;
@@ -172,7 +172,7 @@ int Tab::loadConfig(std::string filename) {
     }
 
     /* Groupings tab! */
-    case 2: {
+    case GROUPINGS: {
       topLeftX = 118;
       topLeftY = 0;
       width = 87;
@@ -195,7 +195,7 @@ int Tab::loadConfig(std::string filename) {
     }
 
     /* Ignorelist tab! */
-    case 3: {
+    case IGNORELST: {
       topLeftX = 205;
       topLeftY = 0;
       width = 79;

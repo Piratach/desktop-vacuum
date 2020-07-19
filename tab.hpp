@@ -1,5 +1,13 @@
 #include "circbutton.hpp"
 #include <filesystem>
+#include <iostream>
+
+enum TabMode {
+  MANUAL,
+  AUTO,
+  GROUPINGS,
+  IGNORELST
+};
 
 // Tab functions like a button but is not actually one...
 // Tab class will deal with all the tab switching completely EXCEPT for 
@@ -8,13 +16,13 @@
 class Tab {
   public:
 
-    Tab (int tabMode) {
-      mode = tabMode;
+    Tab (TabMode m) {
+      mode = m;
     }
 
     // this will get called from scene.cpp - more explicit this way
     // will also set xmlFilename variable in this function
-    //
+    
     // hardcoded for now...
     int loadConfig(std::string xmlFilename);
 
@@ -35,7 +43,7 @@ class Tab {
     float left, right;
 
   private:
-    int mode; // 0, 1, 2, 3 - identifies which mode this tab is assigned to
+    TabMode mode; // 0, 1, 2, 3 - identifies which mode this tab is assigned to
     float topLeftX, topLeftY, width, height;
     sf::RectangleShape leftTabLine, rightTabLine;
 

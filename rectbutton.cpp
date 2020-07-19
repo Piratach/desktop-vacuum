@@ -1,6 +1,55 @@
 #include "rectbutton.hpp"
 #include <iostream>
 
+
+/* to be redefined later */
+RectButton::RectButton() {
+  topLeftX = 0;
+  topLeftY = 0;
+  width = 0;
+  height = 0;
+  colour = sf::Color::White;
+  borderCol = sf::Color::White;
+  rawIdText = "";
+  rawRunText = "";
+  font = sf::Font();
+  textSize = 0;
+}
+
+RectButton::RectButton(float x, float y, float w, float h, sf::Color fillCol,
+        sf::Color outlineCol, std::string idletext, std::string runtext,
+        sf::Font f, float textsize) {
+  topLeftX = x;
+  topLeftY = y;
+  width = w;
+  height = h;
+  colour = fillCol;
+  borderCol = outlineCol;
+  rawIdText = idletext;
+  rawRunText = runtext;
+  font = f;
+  textSize = textsize;
+
+  init();
+}
+
+void RectButton::setAttr(float x, float y, float w, float h, sf::Color fillCol,
+        sf::Color outlineCol, std::string idletext, std::string runtext,
+        sf::Font f, float textsize) {
+  topLeftX = x;
+  topLeftY = y;
+  width = w;
+  height = h;
+  colour = fillCol;
+  borderCol = outlineCol;
+  rawIdText = idletext;
+  rawRunText = runtext;
+  font = f;
+  textSize = textsize;
+
+  init();
+}
+
 bool RectButton::checkPressed(float x, float y) {
   if (topLeftX <= x && x <= topLeftX + width && 
       topLeftY <= y && y <= topLeftY + height) {

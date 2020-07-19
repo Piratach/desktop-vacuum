@@ -6,22 +6,15 @@
 class RectButton {
   public:
 
+    RectButton();
+
     RectButton(float x, float y, float w, float h, sf::Color fillCol,
         sf::Color outlineCol, std::string idletext, std::string runtext,
-        sf::Font f, float textsize) {
-      topLeftX = x;
-      topLeftY = y;
-      width = w;
-      height = h;
-      colour = fillCol;
-      borderCol = outlineCol;
-      rawIdText = idletext;
-      rawRunText = runtext;
-      font = f;
-      textSize = textsize;
+        sf::Font f, float textsize);
 
-      init();
-    }
+    void setAttr(float x, float y, float w, float h, sf::Color fillCol,
+        sf::Color outlineCol, std::string idletext, std::string runtext,
+        sf::Font f, float textsize);
 
     bool checkPressed(float x, float y);
     void draw(sf::RenderWindow &window);

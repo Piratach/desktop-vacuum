@@ -61,7 +61,7 @@ std::string Directory::getTargetDir(std::string currPath) {
 
 // Directory.move will ALWAYS move the file out of immediate directory
 // Arguments: name of current file, target directory to move to, current mode
-// Returns: 1, if no new directory has been created
+// Returns: 1, if new directory has been created
 //          0, otherwise
 int Directory::move(std::string oldName, std::string targetDir, int manual) {
   // targetDir taken from extension
@@ -74,13 +74,13 @@ int Directory::move(std::string oldName, std::string targetDir, int manual) {
       replaceName(targetDir, oldName, newName, 0);
     }
     std::rename(oldName.c_str(), newName.c_str());
-    flag = 1;
+    flag = 0;
   } else {
     std::filesystem::create_directory(targetDir);
     std::cout << "Created new directory!" << std::endl;
     std::rename(oldName.c_str(), newName.c_str());
-    // set tag to true
-    flag = 0;
+    // set tag to false
+    flag = 1;
   }
   if (manual) {
     writeChanges(targetDir, oldName, newName);
@@ -119,6 +119,8 @@ void Directory::closeSaveFile(void) {
 int Directory::autoClean(void) {
   std::string fileFound = "";
   newNumFiles = 0;
+  bool fileIgnored = false;
+  std::cout << "curr: " << currNumFiles << std::endl;
   for(auto& p: std::filesystem::directory_iterator(dirPath)) {
     std::filesystem::path currPath = p.path();
     std::string currFile = currPath.filename();
@@ -126,8 +128,9 @@ int Directory::autoClean(void) {
 
       // if new file added should be ignored
       if (ignore(currPath, currFile)) {
-        dirManager[currFile] = true;
-        return 0;
+        dirManager[currFile] = true; // add to the ok map
+        removalCheck(); // in the case of renamings
+        fileIgnored = true;
       }
 
       // either new file or renaming
@@ -135,6 +138,13 @@ int Directory::autoClean(void) {
     }
     newNumFiles++;
   }
+
+  if (fileIgnored) {
+    currNumFiles = newNumFiles;
+    return 0;
+  }
+
+  std::cout << newNumFiles << std::endl;
   
   // we are now casing on number of files to check for renamings
   if (currNumFiles == newNumFiles) {
@@ -150,14 +160,14 @@ int Directory::autoClean(void) {
     std::cout << "Moving new file" << std::endl;
     dirManager[fileFound] = true;
     int flag = cleanFile(fileFound);
-    if (flag == -1) {
+    if (flag == -1) { // no move needed
       currNumFiles = newNumFiles;
       return 0;
     // moved
-    } else if (flag == 1) {
-      // new directory
+    } else if (flag == 1) { // new dir created
       currNumFiles = newNumFiles;
     }
+    std::cout << "end2: " << currNumFiles << std::endl;
     dirManager[fileFound] = false;
     return 1; // kevent triggered
 
@@ -171,6 +181,7 @@ int Directory::autoClean(void) {
     }
     // update dirManager
     removalCheck(); 
+    std::cout << "end3: " << currNumFiles << std::endl;
     return 0; // kevent not triggered
   }
 }
@@ -222,14 +233,11 @@ bool Directory::fileExists(std::string currFile) {
 
 // removalCheck: checks for removal and records it
 void Directory::removalCheck(void) {
-  if (currNumFiles >= newNumFiles) {
-    // a file has been deleted/moved
-    currNumFiles = newNumFiles;
-    for (const auto &pair : dirManager) {
-      if (!std::filesystem::exists(pair.first)) {
-        dirManager[pair.first] = false;
-      }
+  // a file has been deleted/moved
+  if (currNumFiles > newNumFiles) currNumFiles = newNumFiles;
+  for (const auto &pair : dirManager) {
+    if (!std::filesystem::exists(pair.first)) {
+      dirManager[pair.first] = false;
     }
   }
 }
-

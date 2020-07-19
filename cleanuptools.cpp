@@ -58,6 +58,7 @@ int CleanupTools::revert() {
   return 0;
 }
 
+/* https://stackoverflow.com/questions/11556545/fsevents-c-example */
 int CleanupTools::autoCleanup() {
 
   std::cout << "Auto-cleanup..." << std::endl;
@@ -100,12 +101,9 @@ int CleanupTools::autoCleanup() {
     if (change.udata == NULL) {
       break;
     } else {
-      std::cout << "Change!" << std::endl;
       // clean up new files and check status of files
       if (cleaned) cleaned = 0;
       else cleaned = currDir.autoClean();
-
-      std::cout << "Change done!" << std::endl;
     }
   }
   close(kq);

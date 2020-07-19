@@ -80,6 +80,8 @@ void RectButton::finish(void) {
 void RectButton::init(void) {
 
   // initialising the rect
+  pressed = false;
+
   rect.setSize(sf::Vector2f(width, height));
   rect.setFillColor(colour);
   rect.setPosition(topLeftX, topLeftY);

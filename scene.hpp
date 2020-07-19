@@ -20,7 +20,7 @@ class Scene {
 
     void redrawAll(sf::RenderWindow &window);
     void updateAll(float x, float y, int &MANUALCLEAN, 
-        int &REVERT, int &AUTOCLEAN);
+        int &REVERT, int &AUTOCLEAN, int isAutoActive);
 
     void getMode(TabMode &mode);
     void loadConfig(void);
@@ -28,6 +28,7 @@ class Scene {
     int getWidth(void);
     int getHeight(void);
     sf::Color getBgColour(void);
+
     void finishManualC(int &MANUALCLEAN);
     void finishRevert(int &REVERT);
     void finishAutoC(int &AUTOCLEAN);

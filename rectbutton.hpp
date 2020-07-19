@@ -17,6 +17,7 @@ class RectButton {
         sf::Font f, float textsize);
 
     bool checkPressed(float x, float y);
+
     void draw(sf::RenderWindow &window);
     void finish(void); // used for after running
 

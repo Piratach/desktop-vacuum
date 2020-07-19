@@ -104,7 +104,8 @@ int main() {
           // // interface.getMode(mode); // checking for mode changes
           // // if mode change -- break? think about this
           // // because process one event at once
-          interface.updateAll(x, y, MANUALCLEAN, REVERT, AUTOCLEAN);
+          interface.updateAll(x, y, MANUALCLEAN, REVERT, AUTOCLEAN, 
+              isAutoActive);
 
           // // switch(mode) {
 

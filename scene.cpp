@@ -100,7 +100,7 @@ bool Scene::modeChange(float x, float y) {
 }
 
 void Scene::updateAll(float x, float y, int &MANUALCLEAN, int &REVERT, 
-    int &AUTOCLEAN)  {
+    int &AUTOCLEAN, int isAutoActive)  {
   // assert(MANUALCLEAN == 0);
   // assert(REVERT == 0);
   // assert(AUTOCLEAN == 0);
@@ -109,9 +109,9 @@ void Scene::updateAll(float x, float y, int &MANUALCLEAN, int &REVERT,
   if (!modeChange(x, y)) {
     switch(mode) {
       case MANUAL: {
-        if (manualButton.checkPressed(x, y)) {
+        if (!isAutoActive && manualButton.checkPressed(x, y)) {
           MANUALCLEAN = 1;
-        } else if (revertButton.checkPressed(x, y)) {
+        } else if (!isAutoActive && revertButton.checkPressed(x, y)) {
           REVERT = 1;
         } else {
           manualTab.update(x, y);

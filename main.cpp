@@ -22,8 +22,9 @@ int main() {
   // Scene Interface/UI; -- maybe copy constructor inits as well
   int pid;
   TabMode mode = MANUAL;
-  int AUTOCLEAN = 0;
   int MANUALCLEAN = 0;
+  int REVERT = 0;
+  int AUTOCLEAN = 0;
   int EVENTPROCESSED = 1; // start off by drawing the base
 
   Scene interface;
@@ -37,11 +38,6 @@ int main() {
       sf::Style::Titlebar | sf::Style::Close);
   window.setVerticalSyncEnabled(true);
 
-  // ON SECOND THOUGHT: initialise colours through a different function...
-  // maybe
-  // colour definitions and drawing the UI hopefully initialised in UI
-  // font loading and all that...
-
   // [>* Cleaner *<]
 
   std::string dirPath = fs::current_path();
@@ -54,8 +50,18 @@ int main() {
 
     if (MANUALCLEAN) {
       // cleaner.manualCleanup();
-      // manualButton.finish();
-      MANUALCLEAN = 0;
+      std::this_thread::sleep_for(std::chrono::milliseconds(400));
+      interface.finishManualC(MANUALCLEAN);
+      EVENTPROCESSED = 1;
+    } else if (REVERT) {
+      // cleaner.revert();
+      std::this_thread::sleep_for(std::chrono::milliseconds(400));
+      interface.finishRevert(REVERT);
+      EVENTPROCESSED = 1;
+    } else if (AUTOCLEAN) {
+      // needs more AUTOCLEAN checks...this case is different
+      std::this_thread::sleep_for(std::chrono::milliseconds(400));
+      interface.finishAutoC(AUTOCLEAN);
       EVENTPROCESSED = 1;
     }
 
@@ -64,7 +70,9 @@ int main() {
       EVENTPROCESSED = 1;
       float x = sf::Mouse::getPosition(window).x;
       float y = sf::Mouse::getPosition(window).y;
+
       switch(event.type) {
+
         case sf::Event::Closed:
           window.close();
           if (AUTOCLEAN) kill(pid, SIGKILL);
@@ -81,7 +89,7 @@ int main() {
           // // interface.getMode(mode); // checking for mode changes
           // // if mode change -- break? think about this
           // // because process one event at once
-          interface.updateAll(x, y);
+          interface.updateAll(x, y, MANUALCLEAN, REVERT, AUTOCLEAN);
 
           // // switch(mode) {
 

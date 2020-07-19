@@ -55,47 +55,76 @@ sf::Color Scene::getBgColour(void) {
   return bgColour;
 }
 
+void Scene::finishManualC(int &MANUALCLEAN) {
+  MANUALCLEAN = 0;
+  manualButton.finish();
+}
+
+void Scene::finishRevert(int &REVERT) {
+  REVERT = 0;
+  revertButton.finish();
+}
+
+void Scene::finishAutoC(int &AUTOCLEAN) {
+  AUTOCLEAN = 0;
+  autoButton.finish();
+}
+
 bool Scene::modeChange(float x, float y) {
   if (manualTab.checkPressed(x, y)) {
     mode = MANUAL;
     tabLineL.setSize(sf::Vector2f(0, 0));
-    tabLineR.setPosition(manualTab.right, 31);
+    tabLineR.setPosition(manualTab.right, tabHeight);
     tabLineR.setSize(sf::Vector2f(width - manualTab.right, 1));
     return true;
   } else if (autoTab.checkPressed(x, y)) {
     mode = AUTO;
     tabLineL.setSize(sf::Vector2f(autoTab.left, 1));
     tabLineR.setSize(sf::Vector2f(width - autoTab.right, 1));
-    tabLineR.setPosition(autoTab.right, 31);
+    tabLineR.setPosition(autoTab.right, tabHeight);
     return true;
   } else if (grpTab.checkPressed(x, y)) {
     mode = GROUPINGS;
     tabLineL.setSize(sf::Vector2f(grpTab.left, 1));
     tabLineR.setSize(sf::Vector2f(width - grpTab.right, 1));
-    tabLineR.setPosition(grpTab.right, 31);
+    tabLineR.setPosition(grpTab.right, tabHeight);
     return true;
   } else if (ignTab.checkPressed(x, y)) {
     mode = IGNORELST;
     tabLineL.setSize(sf::Vector2f(ignTab.left, 1));
     tabLineR.setSize(sf::Vector2f(width - ignTab.right, 1));
-    tabLineR.setPosition(ignTab.right, 31);
+    tabLineR.setPosition(ignTab.right, tabHeight);
     return true;
   }
   return false;
 }
 
-void Scene::updateAll(float x, float y)  {
+void Scene::updateAll(float x, float y, int &MANUALCLEAN, int &REVERT, 
+    int &AUTOCLEAN)  {
+  // assert(MANUALCLEAN == 0);
+  // assert(REVERT == 0);
+  // assert(AUTOCLEAN == 0);
+
   // take into account button presses
   if (!modeChange(x, y)) {
     switch(mode) {
       case MANUAL: {
-        manualTab.update(x, y);
+        if (manualButton.checkPressed(x, y)) {
+          MANUALCLEAN = 1;
+        } else if (revertButton.checkPressed(x, y)) {
+          REVERT = 1;
+        } else {
+          manualTab.update(x, y);
+        }
         break;
       }
 
       case AUTO: {
-        // fork for auto mode??
-        autoTab.update(x, y);
+        if (autoButton.checkPressed(x, y)) {
+          AUTOCLEAN = 1;
+        } else {
+          autoTab.update(x, y);
+        }
         break;
       }
 
@@ -118,6 +147,7 @@ void Scene::loadConfig(void) {
   mode = MANUAL;
   width = 510;
   height = 290;
+  tabHeight = 31;
 
   // dark blue
   bgColour.r = 38;

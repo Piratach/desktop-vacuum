@@ -19,7 +19,8 @@ class Scene {
     {}
 
     void redrawAll(sf::RenderWindow &window);
-    void updateAll(float x, float y);
+    void updateAll(float x, float y, int &MANUALCLEAN, 
+        int &REVERT, int &AUTOCLEAN);
 
     void getMode(TabMode &mode);
     void loadConfig(void);
@@ -27,12 +28,16 @@ class Scene {
     int getWidth(void);
     int getHeight(void);
     sf::Color getBgColour(void);
+    void finishManualC(int &MANUALCLEAN);
+    void finishRevert(int &REVERT);
+    void finishAutoC(int &AUTOCLEAN);
 
   private:
 
     TabMode mode; 
     sf::Font font;
     int width, height; //of screen
+    int tabHeight;
     sf::Color bgColour, lesserBgColour;
 
     // don't need an array for this, just check all cases. A bit more tedious,

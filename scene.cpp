@@ -121,7 +121,8 @@ void Scene::updateAll(float x, float y, int &MANUALCLEAN, int &REVERT,
 
       case AUTO: {
         if (autoButton.checkPressed(x, y)) {
-          AUTOCLEAN = 1;
+          // toggle for auto
+          AUTOCLEAN = not AUTOCLEAN;
         } else {
           autoTab.update(x, y);
         }
@@ -182,7 +183,7 @@ void Scene::loadConfig(void) {
 
   autoButton.setAttr(width/2 - 86, 240, 160, 30, sf::Color(36, 50, 84), 
       lesserBgColour, "Auto Cleanup",
-      "Active", font, 14);
+      "Auto Cleaning...", font, 14);
 
   /* Lines above and below the tabs */
   upperTabLine.setSize(sf::Vector2f(width, 2));

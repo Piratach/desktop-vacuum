@@ -19,13 +19,15 @@
 namespace fs = std::filesystem;
 
 int main() {
-  // Scene Interface/UI; -- maybe copy constructor inits as well
+
   int pid;
   TabMode mode = MANUAL;
   int MANUALCLEAN = 0;
   int REVERT = 0;
-  int AUTOCLEAN = 0;
+  int AUTOCLEAN = 0; // activate everytime button pressed
   int EVENTPROCESSED = 1; // start off by drawing the base
+  
+  int isAutoActive= 0;  
 
   Scene interface;
   interface.loadConfig();
@@ -48,12 +50,12 @@ int main() {
   while (window.isOpen()) {
     sf::Event event;
 
-    if (MANUALCLEAN) {
+    if (MANUALCLEAN && !isAutoActive) {
       // cleaner.manualCleanup();
       std::this_thread::sleep_for(std::chrono::milliseconds(400));
       interface.finishManualC(MANUALCLEAN);
       EVENTPROCESSED = 1;
-    } else if (REVERT) {
+    } else if (REVERT && !isAutoActive) {
       // cleaner.revert();
       std::this_thread::sleep_for(std::chrono::milliseconds(400));
       interface.finishRevert(REVERT);
@@ -61,7 +63,20 @@ int main() {
     } else if (AUTOCLEAN) {
       // needs more AUTOCLEAN checks...this case is different
       std::this_thread::sleep_for(std::chrono::milliseconds(400));
-      interface.finishAutoC(AUTOCLEAN);
+      if (isAutoActive) {
+        // killing running process
+        kill(pid, SIGKILL);
+        interface.finishAutoC(isAutoActive);
+      } else {
+        // start autoclean process
+        pid = fork();
+        if (pid == 0) {
+          cleaner.autoCleanup();
+          exit(0);
+        }
+        isAutoActive = 1;
+      }
+      AUTOCLEAN = 0;
       EVENTPROCESSED = 1;
     }
 
@@ -75,7 +90,7 @@ int main() {
 
         case sf::Event::Closed:
           window.close();
-          if (AUTOCLEAN) kill(pid, SIGKILL);
+          if (isAutoActive) kill(pid, SIGKILL);
           break;
 
         case sf::Event::LostFocus:

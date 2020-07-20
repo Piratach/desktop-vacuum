@@ -25,5 +25,12 @@ tab.o: tab.hpp tab.cpp
 scene.o: scene.hpp scene.cpp
 	g++ -std=c++17 -c scene.cpp
 
+makeXML: makeXML.o
+	g++ -std=c++17 makeXML.o -o makeXML -lstdc++ -ltinyxml2
+	rm -r *.o
+
+makeXML.o: makeXML.cpp
+	g++ -std=c++17 -c makeXML.cpp
+
 clean:
 	rm -rf main *.o

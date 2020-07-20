@@ -178,10 +178,10 @@ void Scene::loadConfig(void) {
   }
 
   /* Load & init 4 different tabs */
-  manualTab.loadConfig("ok");
-  autoTab.loadConfig("");
-  grpTab.loadConfig("");
-  ignTab.loadConfig("");
+  manualTab.loadConfig("manualConfig.xml");
+  autoTab.loadConfig("autoConfig.xml");
+  grpTab.loadConfig("groupConfig.xml");
+  ignTab.loadConfig("ignoreConfig.xml");
 
   /* The 3 function buttons */
   manualButton.setAttr(40, 240, 160, 30, sf::Color(36, 50, 84), 

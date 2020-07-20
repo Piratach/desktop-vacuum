@@ -65,8 +65,7 @@ int Tab::loadConfig(std::string filename) {
       width = 69;
       height = 32;
 
-      rightTabLine.setSize(sf::Vector2f(30, 1));
-      rightTabLine.rotate(90);
+      rightTabLine.setSize(sf::Vector2f(1, 30));
       rightTabLine.setFillColor(sf::Color::White);
       rightTabLine.setPosition(69, 2);
 
@@ -116,13 +115,11 @@ int Tab::loadConfig(std::string filename) {
       width = 49;
       height = 32;
 
-      leftTabLine.setSize(sf::Vector2f(30, 1));
-      leftTabLine.rotate(90);
+      leftTabLine.setSize(sf::Vector2f(1, 30));
       leftTabLine.setFillColor(sf::Color::White);
       leftTabLine.setPosition(69, 2);
 
-      rightTabLine.setSize(sf::Vector2f(30, 1));
-      rightTabLine.rotate(90);
+      rightTabLine.setSize(sf::Vector2f(1, 30));
       rightTabLine.setFillColor(sf::Color::White);
       rightTabLine.setPosition(118, 2);
 
@@ -182,13 +179,11 @@ int Tab::loadConfig(std::string filename) {
       width = 87;
       height = 32;
 
-      leftTabLine.setSize(sf::Vector2f(30, 1));
-      leftTabLine.rotate(90);
+      leftTabLine.setSize(sf::Vector2f(1, 30));
       leftTabLine.setFillColor(sf::Color::White);
       leftTabLine.setPosition(118, 2);
 
-      rightTabLine.setSize(sf::Vector2f(30, 1));
-      rightTabLine.rotate(90);
+      rightTabLine.setSize(sf::Vector2f(1, 30));
       rightTabLine.setFillColor(sf::Color::White);
       rightTabLine.setPosition(205, 2);
 
@@ -205,13 +200,11 @@ int Tab::loadConfig(std::string filename) {
       width = 79;
       height = 32;
 
-      leftTabLine.setSize(sf::Vector2f(30, 1));
-      leftTabLine.rotate(90);
+      leftTabLine.setSize(sf::Vector2f(1, 30));
       leftTabLine.setFillColor(sf::Color::White);
       leftTabLine.setPosition(205, 2);
 
-      rightTabLine.setSize(sf::Vector2f(30, 1));
-      rightTabLine.rotate(90);
+      rightTabLine.setSize(sf::Vector2f(1, 30));
       rightTabLine.setFillColor(sf::Color::White);
       rightTabLine.setPosition(284, 2);
 

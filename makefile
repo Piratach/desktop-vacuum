@@ -1,36 +1,36 @@
-all: main 
+# based on https://stackoverflow.com/questions/30573481/path-include-and-src-directory-makefile
 
-main: main.o scene.o cleanuptools.o directory.o circbutton.o rectbutton.o tab.o
-	g++ -std=c++17 main.o scene.o cleanuptools.o directory.o circbutton.o rectbutton.o tab.o -o main -lstdc++ -lsfml-graphics -lsfml-window -lsfml-system
-	rm -r *.o
+SRC_DIR := src
+INC_DIR := include
+OBJ_DIR := obj
+BIN_DIR := build
 
-main.o: main.cpp
-	g++ -std=c++17 -c main.cpp
+CPPFLAGS := -Iinclude -Isrc	-MMD -MP  # -I is a preprocessor flag, not a compiler flag
+SFMLFLAGS := -lsfml-graphics -lsfml-window -lsfml-system
+CFLAGS   := -Wall              # some warnings about bad code
 
-cleanuptools.o: cleanuptools.hpp cleanuptools.cpp
-	g++ -std=c++17 -c cleanuptools.cpp
+EXE := $(BIN_DIR)/main
 
-directory.o: directory.cpp directory.hpp
-	g++ -std=c++17 -c directory.cpp
+# list of all source files
+SRC := $(wildcard $(SRC_DIR)/*.cpp)
 
-rectbutton.o: rectbutton.cpp rectbutton.hpp
-	g++ -std=c++17 -c rectbutton.cpp
+# replacing .cpp with .o
+OBJ := $(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 
-circbutton.o: circbutton.hpp circbutton.cpp
-	g++ -std=c++17 -c circbutton.cpp
+CPL := g++ -std=c++17
 
-tab.o: tab.hpp tab.cpp
-	g++ -std=c++17 -c tab.cpp
+.PHONY: all clean
 
-scene.o: scene.hpp scene.cpp
-	g++ -std=c++17 -c scene.cpp
+all: $(EXE) 
 
-makeXML: makeXML.o
-	g++ -std=c++17 makeXML.o -o makeXML -lstdc++ -ltinyxml2
-	rm -r *.o
+$(EXE): $(OBJ) | $(BIN_DIR)
+	$(CPL) $(SFMLFLAGS) $^ -o $@ 
 
-makeXML.o: makeXML.cpp
-	g++ -std=c++17 -c makeXML.cpp
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
+	$(CPL) $(CPPFLAGS) -c $< -o $@
+
+$(BIN_DIR) $(OBJ_DIR):
+	mkdir -p $@
 
 clean:
-	rm -rf main *.o
+	@$(RM) -rv $(BIN_DIR) $(OBJ_DIR)

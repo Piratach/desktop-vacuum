@@ -80,6 +80,7 @@ int Tab::loadConfig(std::string filename) {
 
       std::string cwd = std::filesystem::current_path();
       if (cwd.length() >= 55) cwd = dirNameOnly(cwd); // check 55 again...
+
       sf::Text text2(cwd, font, 16);
       text2.setFillColor(sf::Color::White);
       text2.setPosition(97, 52);

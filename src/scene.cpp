@@ -172,7 +172,8 @@ void Scene::loadConfig(void) {
   lesserBgColour.b = 70;
 
   // loading fonts
-  if (!font.loadFromFile("OpenSans-Light.ttf")) {
+  if (!font.loadFromFile("../res/OpenSans-Light.ttf")) {
+  // if (!font.loadFromFile("OpenSans-Light.ttf")) {
     std::cerr << "Error: OpenSans-Light.ttf not found." << std::endl;
     exit(EXIT_FAILURE);
   }

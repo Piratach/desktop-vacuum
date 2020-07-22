@@ -1,4 +1,5 @@
 #include "cleanuptools.hpp"
+#include "scene.hpp"
 #include <SFML/Graphics.hpp>
 #include <csignal>
 #include <string>
@@ -6,7 +7,6 @@
 // temp includes
 #include <chrono>
 #include <thread>
-#include "scene.hpp"
 
 /*****************************************************************************
  * expected makefile
@@ -29,6 +29,9 @@ int main() {
   
   int isAutoActive= 0;  
 
+  std::string dirPath = fs::current_path();
+  std::cout << dirPath << std::endl;
+
   Scene interface;
   interface.loadConfig();
 
@@ -42,7 +45,6 @@ int main() {
 
   // [>* Cleaner *<]
 
-  std::string dirPath = fs::current_path();
 
   CleanupTools cleaner(dirPath);
 

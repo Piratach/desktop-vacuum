@@ -3,6 +3,7 @@
 // #include <SFML/Graphics.hpp>
 #include "SFML-2.5.1-macos-clang/include/SFML/Graphics.hpp"
 #include "SFML-2.5.1-macos-clang/include/SFML/Window.hpp"
+#include "whereami/whereami.h"
 #include <csignal>
 #include <string>
 
@@ -31,11 +32,22 @@ int main() {
   
   int isAutoActive= 0;  
 
-  std::string dirPath = fs::current_path();
+  // desktop-vacuum/src/main.cpp
+  // monitor directory that contains desktop-vacuum
+  int length = wai_getExecutablePath(NULL, 0, NULL);
+  char *path = new char[length + 1];
+  wai_getExecutablePath(path, length, NULL);
+  path[length] = '\0';
+  std::cout << path << std::endl;
+  fs::path buildPath = fs::path(path).parent_path(); // desktop-vacuum/build
+  fs::path dirPath = buildPath.parent_path(); // desktop-vacuum
+  fs::path resPath = fs::path(dirPath.string() + "/res");
+  fs::path monitorPath = dirPath.parent_path();
   std::cout << dirPath << std::endl;
+  std::cout << monitorPath << std::endl;
 
   Scene interface;
-  interface.loadConfig();
+  interface.loadConfig(monitorPath);
 
   int width = interface.getWidth();
   int height = interface.getHeight();
@@ -47,8 +59,9 @@ int main() {
 
   // [>* Cleaner *<]
 
+  CleanupTools cleaner(monitorPath);
 
-  CleanupTools cleaner(dirPath);
+  delete[] path;
 
   // [> Event-based rendering <]
   while (window.isOpen()) {

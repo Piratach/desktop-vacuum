@@ -23,7 +23,7 @@ CPL := g++ -std=c++17
 
 all: $(EXE) 
 
-$(EXE): $(OBJ) | $(BIN_DIR)
+$(EXE): $(OBJ) $(OBJ_DIR)/whereami.o | $(BIN_DIR)
 	$(CPL) $(SFMLFLAGS) $^ -o $@ 
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
@@ -31,6 +31,9 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
 
 $(BIN_DIR) $(OBJ_DIR):
 	mkdir -p $@
+
+$(OBJ_DIR)/whereami.o: ext/whereami/whereami.c ext/whereami/whereami.h
+	gcc -c $< -o $@
 
 clean:
 	@$(RM) -rv $(BIN_DIR) $(OBJ_DIR)

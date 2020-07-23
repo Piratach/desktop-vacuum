@@ -15,7 +15,7 @@ class Scene {
         int &REVERT, int &AUTOCLEAN, int isAutoActive);
 
     void getMode(TabMode &mode);
-    void loadConfig(void);
+    void loadConfig(std::string resDir);
 
     int getWidth(void);
     int getHeight(void);

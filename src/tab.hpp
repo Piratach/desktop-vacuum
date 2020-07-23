@@ -22,7 +22,7 @@ class Tab {
     // will also set xmlFilename variable in this function
     
     // hardcoded for now...
-    int loadConfig(std::string xmlFilename);
+    int loadConfig(std::string xmlFilename, std::string monitorDir, sf::Font f);
 
     // this will be called in scene.getMode(float x, float y);
     bool checkPressed(float x, float y);
@@ -44,6 +44,8 @@ class Tab {
     TabMode mode; // 0, 1, 2, 3 - identifies which mode this tab is assigned to
     float topLeftX, topLeftY, width, height;
     sf::RectangleShape leftTabLine, rightTabLine;
+
+    std::string monitorDir;
 
     // font
     sf::Font font;

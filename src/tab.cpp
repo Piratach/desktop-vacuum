@@ -47,14 +47,17 @@ void Tab::writeChanges(void) {
 
 /******************************* Incomplete  **********************************/
 
-int Tab::loadConfig(std::string filename) {
+int Tab::loadConfig(std::string filename, std::string monitorPath, sf::Font f) {
   xmlFilename = filename; // will have to load and get info later
+  monitorDir = monitorPath;
+
+  font = f;
 
   // loading font
-  if (!font.loadFromFile("OpenSans-Light.ttf")) {
-    std::cerr << "Error: OpenSans-Light.ttf not found." << std::endl;
-    exit(EXIT_FAILURE);
-  }
+  // if (!font.loadFromFile("OpenSans-Light.ttf")) {
+    // std::cerr << "Error: OpenSans-Light.ttf not found." << std::endl;
+    // exit(EXIT_FAILURE);
+  // }
 
   switch (mode) {
 
@@ -78,10 +81,10 @@ int Tab::loadConfig(std::string filename) {
       text1.setPosition(25, 52);
       textArray.push_back(text1);
 
-      std::string cwd = std::filesystem::current_path();
-      if (cwd.length() >= 55) cwd = dirNameOnly(cwd); // check 55 again...
+      // check 55 again...
+      if (monitorDir.length() >= 55) monitorDir = dirNameOnly(monitorDir); 
 
-      sf::Text text2(cwd, font, 16);
+      sf::Text text2(monitorDir, font, 16);
       text2.setFillColor(sf::Color::White);
       text2.setPosition(97, 52);
       textArray.push_back(text2);
@@ -133,9 +136,9 @@ int Tab::loadConfig(std::string filename) {
       text1.setPosition(25, 52);
       textArray.push_back(text1);
 
-      std::string cwd = std::filesystem::current_path();
-      if (cwd.length() >= 55) cwd = dirNameOnly(cwd); // check 55 again...
-      sf::Text text2(cwd, font, 16);
+      // check 55 again...
+      if (monitorDir.length() >= 55) monitorDir = dirNameOnly(monitorDir);
+      sf::Text text2(monitorDir, font, 16);
       text2.setFillColor(sf::Color::White);
       text2.setPosition(97, 52);
       textArray.push_back(text2);

@@ -65,9 +65,13 @@ std::string Directory::getTargetDir(std::string currPath) {
 //          0, otherwise
 int Directory::move(std::string oldName, std::string targetDir, int manual) {
   // targetDir taken from extension
+  targetDir = dirPath + "/" + targetDir;
   std::string newName = targetDir + "/" + oldName;
-  int flag;
+  oldName = dirPath + "/" + oldName; // full path name used
+
+  int flag; // return
   std::cout << "Attempting to move..." << std::endl;
+  std::cout << oldName << " to " << newName << std::endl;
   // check with a tag to avoid computation
   if (std::filesystem::exists(targetDir)) {
     if (std::filesystem::exists(newName)) {

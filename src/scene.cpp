@@ -153,7 +153,10 @@ void Scene::updateAll(float x, float y, int &MANUALCLEAN, int &REVERT,
   }
 }
 
-void Scene::loadConfig(void) {
+void Scene::loadConfig(std::string monitorPath) {
+
+  std::string resDir = monitorPath + "/desktop-vacuum/res";
+  std::string fontPath = resDir + "/OpenSans-Light.ttf";
 
   /* start off at manual */
   mode = MANUAL;
@@ -172,17 +175,17 @@ void Scene::loadConfig(void) {
   lesserBgColour.b = 70;
 
   // loading fonts
-  if (!font.loadFromFile("../res/OpenSans-Light.ttf")) {
+  if (!font.loadFromFile(fontPath)) {
   // if (!font.loadFromFile("OpenSans-Light.ttf")) {
     std::cerr << "Error: OpenSans-Light.ttf not found." << std::endl;
     exit(EXIT_FAILURE);
   }
 
   /* Load & init 4 different tabs */
-  manualTab.loadConfig("manualConfig.xml");
-  autoTab.loadConfig("autoConfig.xml");
-  grpTab.loadConfig("groupConfig.xml");
-  ignTab.loadConfig("ignoreConfig.xml");
+  manualTab.loadConfig("manualConfig.xml", monitorPath, font);
+  autoTab.loadConfig("autoConfig.xml", monitorPath, font);
+  grpTab.loadConfig("groupConfig.xml", monitorPath, font);
+  ignTab.loadConfig("ignoreConfig.xml", monitorPath, font);
 
   /* The 3 function buttons */
   manualButton.setAttr(40, 240, 160, 30, sf::Color(36, 50, 84), 

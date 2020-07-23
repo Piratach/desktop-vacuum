@@ -1,0 +1,9 @@
+# external libraries
+ext/*
+!ext/README.md
+
+# object files
+obj/*
+
+# builds
+build/*

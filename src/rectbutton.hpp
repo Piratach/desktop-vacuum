@@ -1,4 +1,5 @@
-#include <SFML/Graphics.hpp>
+// #include <SFML/Graphics.hpp>
+#include "SFML-2.5.1-macos-clang/include/SFML/Graphics.hpp"
 
 // this class will be used directly in scene.cpp because the things it 
 // does are so important

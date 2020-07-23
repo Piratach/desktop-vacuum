@@ -1,4 +1,4 @@
-#include <SFML/Graphics.hpp>
+#include "SFML-2.5.1-macos-clang/include/SFML/Graphics.hpp"
 #include <cmath>
 
 class CircButton {

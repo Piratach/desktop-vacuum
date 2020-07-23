@@ -5,7 +5,7 @@ INC_DIR := include
 OBJ_DIR := obj
 BIN_DIR := build
 
-CPPFLAGS := -Iinclude -Isrc	-MMD -MP  # -I is a preprocessor flag, not a compiler flag
+CPPFLAGS := -Iinclude -Isrc	-Iext -MMD -MP  # -I is a preprocessor flag, not a compiler flag
 SFMLFLAGS := -lsfml-graphics -lsfml-window -lsfml-system
 CFLAGS   := -Wall              # some warnings about bad code
 

@@ -1,6 +1,8 @@
 #include "cleanuptools.hpp"
 #include "scene.hpp"
-#include <SFML/Graphics.hpp>
+// #include <SFML/Graphics.hpp>
+#include "SFML-2.5.1-macos-clang/include/SFML/Graphics.hpp"
+#include "SFML-2.5.1-macos-clang/include/SFML/Window.hpp"
 #include <csignal>
 #include <string>
 

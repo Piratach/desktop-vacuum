@@ -155,8 +155,11 @@ void Scene::updateAll(float x, float y, int &MANUALCLEAN, int &REVERT,
 
 void Scene::loadConfig(std::string monitorPath) {
 
+  /* Things needed for Tab.loadConfig */
   std::string resDir = monitorPath + "/desktop-vacuum/res";
   std::string fontPath = resDir + "/OpenSans-Light.ttf";
+  sf::Color defaultCol = sf::Color::White;
+  sf::Color button2Col = sf::Color(100, 111, 124);
 
   /* start off at manual */
   mode = MANUAL;
@@ -182,10 +185,14 @@ void Scene::loadConfig(std::string monitorPath) {
   }
 
   /* Load & init 4 different tabs */
-  manualTab.loadConfig("manualConfig.xml", monitorPath, font);
-  autoTab.loadConfig("autoConfig.xml", monitorPath, font);
-  grpTab.loadConfig("groupConfig.xml", monitorPath, font);
-  ignTab.loadConfig("ignoreConfig.xml", monitorPath, font);
+  manualTab.loadConfig(resDir + "/manualConfig.xml", monitorPath, font,
+      defaultCol, button2Col);
+  autoTab.loadConfig(resDir + "/autoConfig.xml", monitorPath, font,
+      defaultCol, button2Col);
+  grpTab.loadConfig(resDir + "/grpConfig.xml", monitorPath, font,
+      defaultCol, button2Col);
+  ignTab.loadConfig(resDir + "/ignConfig.xml", monitorPath, font,
+      defaultCol, button2Col);
 
   /* The 3 function buttons */
   manualButton.setAttr(40, 240, 160, 30, sf::Color(36, 50, 84), 

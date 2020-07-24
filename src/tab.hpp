@@ -1,4 +1,6 @@
 #include "circbutton.hpp"
+
+#include "xmlhelper.hpp"
 #include <filesystem>
 #include <iostream>
 
@@ -22,7 +24,8 @@ class Tab {
     // will also set xmlFilename variable in this function
     
     // hardcoded for now...
-    int loadConfig(std::string xmlFilename, std::string monitorDir, sf::Font f);
+    int loadConfig(std::string xmlFilename, std::string monitorDir, sf::Font f,
+        sf::Color defaultC, sf::Color button2Col);
 
     // this will be called in scene.getMode(float x, float y);
     bool checkPressed(float x, float y);
@@ -42,7 +45,7 @@ class Tab {
 
   private:
     TabMode mode; // 0, 1, 2, 3 - identifies which mode this tab is assigned to
-    float topLeftX, topLeftY, width, height;
+    int topLeftX, topLeftY, width, height;
     sf::RectangleShape leftTabLine, rightTabLine;
 
     std::string monitorDir;

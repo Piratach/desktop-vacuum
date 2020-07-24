@@ -12,11 +12,8 @@
 #include <thread>
 
 /*****************************************************************************
- * expected makefile
  *
- * all: main
  *
- * main: main.o cleanuptools.o directory.o tab.o rectbutton.o
  *****************************************************************************/
 
 namespace fs = std::filesystem;

@@ -59,7 +59,7 @@ int main() {
 
   // [>* Cleaner *<]
 
-  CleanupTools cleaner(monitorPath);
+  CleanupTools cleaner(monitorPath, resPath);
 
   delete[] path;
 

@@ -8,20 +8,23 @@
 
 #include "cleanuptools.hpp"
 
-CleanupTools::CleanupTools (std::string dirName) : currDir(dirName) {
+CleanupTools::CleanupTools (std::string dirName, std::string resName) 
+  : currDir(dirName, resName) 
+{
   dirPath = dirName;
+  resPath = resName;
 };
 
 
-int CleanupTools::initCurrDir(std::string dirName) {
-  if (std::filesystem::exists(dirName)) {
-    std::cout << "Directory " << dirName;
-    std::cout << " could not be found" << std::endl;
-    return -1;
-  }
-  currDir = Directory(dirName);
-  return 0;
-}
+// int CleanupTools::initCurrDir(std::string dirName) {
+  // if (std::filesystem::exists(dirName)) {
+    // std::cout << "Directory " << dirName;
+    // std::cout << " could not be found" << std::endl;
+    // return -1;
+  // }
+  // currDir = Directory(dirName, resName);
+  // return 0;
+// }
 
 /* for now, sort by file extension */
 int CleanupTools::manualCleanup() {

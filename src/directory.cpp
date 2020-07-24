@@ -8,14 +8,15 @@
 /**************************** Public Functions *******************************/
 
 // ctor
-Directory::Directory(std::string path) : mapFileName(".map.txt"), 
-                              saveFileName(".save.txt") 
+Directory::Directory(std::string path, std::string res) : 
+  mapFileName(res + "/.map.txt"), 
+  saveFileName(res + "/.save.txt") 
 {
   dirPath = path;
 };
 
 // Reverts changes made by Manual-Cleanup by checking the writes made 
-// in .save.txt. 
+// in res/.save.txt. 
 void Directory::revert(void) {
 
   // in the case that revert has already been used or 
@@ -47,6 +48,11 @@ void Directory::revert(void) {
 void Directory::initMap(void) {
   std::ifstream infile;
   infile.open(mapFileName);
+  if (!infile) {
+    std::cerr << "Error opening " << mapFileName;
+    /* TODO: Error handling */
+    return;
+  }
   std::string key, val;
   groupings.clear();
   while (infile >> key >> val) {

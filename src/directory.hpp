@@ -37,7 +37,7 @@ class Directory {
   public:
 
     /** Constructor for Directory Class **/
-    Directory(std::string path);
+    Directory(std::string path, std::string res);
 
     /** Revert Mode for Manual-Cleanup **/
     void revert(void);

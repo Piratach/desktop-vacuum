@@ -38,7 +38,7 @@ class Tab {
     void draw(sf::RenderWindow &window);
 
     // basically calls writeChanges for all the buttons 
-    void writeChanges(void);
+    int writeChanges(void);
 
     /* Public variables */
     float left, right;

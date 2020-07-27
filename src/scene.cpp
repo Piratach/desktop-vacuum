@@ -251,3 +251,11 @@ void Scene::loadConfig(std::string monitorPath) {
   ignoreText.setPosition(210, 5);
   tabNameArray.push_back(ignoreText);
 }
+
+int Scene::writeChanges(void) {
+  manualTab.writeChanges();
+  autoTab.writeChanges();
+  grpTab.writeChanges();
+  ignTab.writeChanges();
+  return 0;
+}

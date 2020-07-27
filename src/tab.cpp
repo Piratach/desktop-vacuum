@@ -39,10 +39,18 @@ void Tab::draw(sf::RenderWindow &window) {
 
 }
 
-void Tab::writeChanges(void) {
-  for (auto button : circButtonArray) {
-    button.writeChanges(xmlFilename);
+int Tab::writeChanges(void) {
+  tinyxml2::XMLDocument xmlDoc;
+  if (xmlDoc.LoadFile(xmlFilename.c_str()) != tinyxml2::XML_SUCCESS) {
+    std::cerr << "Error: XML file not found." << std::endl;
+    return -1;
   }
+  tinyxml2::XMLNode *pRoot = xmlDoc.FirstChild();
+  for (auto &button : circButtonArray) {
+    button.writeChanges(pRoot);
+  }
+  xmlDoc.SaveFile(xmlFilename.c_str());
+  return 0;
 }
 
 /******************************* Incomplete  **********************************/
@@ -129,7 +137,7 @@ int Tab::loadConfig(std::string filename, std::string monitorPath, sf::Font f,
       pElement = pRoot->FirstChildElement("button1");
       getButtonAttr(pElement, x, y, r1, r2, p);
       CircButton button1(x, y, r1, r2, defaultCol, 
-          button2Col, p); 
+          button2Col, "button1", p); 
       circButtonArray.push_back(button1);
 
       pElement = pRoot->FirstChildElement("text3");
@@ -142,7 +150,7 @@ int Tab::loadConfig(std::string filename, std::string monitorPath, sf::Font f,
       pElement = pRoot->FirstChildElement("button2");
       getButtonAttr(pElement, x, y, r1, r2, p);
       CircButton button2(x, y, r1, r2, defaultCol, 
-          button2Col, p); 
+          button2Col, "button2", p); 
       circButtonArray.push_back(button2);
 
       pElement = pRoot->FirstChildElement("text4");
@@ -210,7 +218,7 @@ int Tab::loadConfig(std::string filename, std::string monitorPath, sf::Font f,
       pElement = pRoot->FirstChildElement("button1");
       getButtonAttr(pElement, x, y, r1, r2, p);
       CircButton button1(x, y, r1, r2, defaultCol, 
-          button2Col, p); 
+          button2Col, "button1", p); 
       circButtonArray.push_back(button1);
 
       pElement = pRoot->FirstChildElement("text3");
@@ -223,7 +231,7 @@ int Tab::loadConfig(std::string filename, std::string monitorPath, sf::Font f,
       pElement = pRoot->FirstChildElement("button2");
       getButtonAttr(pElement, x, y, r1, r2, p);
       CircButton button2(x, y, r1, r2, defaultCol, 
-          button2Col, p); 
+          button2Col, "button2", p); 
       circButtonArray.push_back(button2);
 
       pElement = pRoot->FirstChildElement("text4");
@@ -236,7 +244,7 @@ int Tab::loadConfig(std::string filename, std::string monitorPath, sf::Font f,
       pElement = pRoot->FirstChildElement("button3");
       getButtonAttr(pElement, x, y, r1, r2, p);
       CircButton button3(x, y, r1, r2, defaultCol, 
-          button2Col, p); 
+          button2Col, "button3", p); 
       circButtonArray.push_back(button3);
 
       pElement = pRoot->FirstChildElement("text5");
@@ -247,66 +255,6 @@ int Tab::loadConfig(std::string filename, std::string monitorPath, sf::Font f,
       textArray.push_back(text5);
 
       break; 
-      // topLeftX = 69;
-      // topLeftY = 0;
-      // width = 49;
-      // height = 32;
-
-      // leftTabLine.setSize(sf::Vector2f(1, 30));
-      // leftTabLine.setFillColor(sf::Color::White);
-      // leftTabLine.setPosition(69, 2);
-
-      // rightTabLine.setSize(sf::Vector2f(1, 30));
-      // rightTabLine.setFillColor(sf::Color::White);
-      // rightTabLine.setPosition(118, 2);
-
-      // left = 69;
-      // right = 118;
-
-      // [>* For future updates *<]
-      // sf::Text text1("Cleaning :", font, 16);
-      // text1.setFillColor(sf::Color::White);
-      // text1.setPosition(25, 52);
-      // textArray.push_back(text1);
-
-      // // check 55 again...
-      // if (monitorDir.length() >= 55) monitorDir = dirNameOnly(monitorDir);
-      // sf::Text text2(monitorDir, font, 16);
-      // text2.setFillColor(sf::Color::White);
-      // text2.setPosition(97, 52);
-      // textArray.push_back(text2);
-
-      // [>* Settings *<]
-
-      // CircButton button1(25, 93, 3, 6, sf::Color::White, 
-          // sf::Color(100, 111, 124), true); 
-      // circButtonArray.push_back(button1);
-
-      // sf::Text text3("Ignore extensions not in groupings", font, 16);
-      // text3.setFillColor(sf::Color::White);
-      // text3.setPosition(55, 88);
-      // textArray.push_back(text3);
-
-      // CircButton button2(25, 129, 3, 6, sf::Color::White, 
-          // sf::Color(100, 111, 124), true); 
-      // circButtonArray.push_back(button2);
-
-      // sf::Text text4("Use ignorelist", font, 16);
-      // text4.setFillColor(sf::Color::White);
-      // text4.setPosition(55, 124);
-      // textArray.push_back(text4);
-
-      // CircButton button3(25, 165, 3, 6, sf::Color::White, 
-          // sf::Color(100, 111, 124), true); 
-      // circButtonArray.push_back(button3);
-
-      // sf::Text text5("Only clean up new additions to the directory",
-          // font, 16);
-      // text5.setFillColor(sf::Color::White);
-      // text5.setPosition(55, 160);
-      // textArray.push_back(text5);
-
-      // break; 
     }
 
     /* Groupings tab! */

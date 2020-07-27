@@ -13,6 +13,7 @@ class Scene {
     void redrawAll(sf::RenderWindow &window);
     void updateAll(float x, float y, int &MANUALCLEAN, 
         int &REVERT, int &AUTOCLEAN, int isAutoActive);
+    int writeChanges(void);
 
     void getMode(TabMode &mode);
     void loadConfig(std::string resDir);

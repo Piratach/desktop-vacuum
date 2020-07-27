@@ -105,6 +105,7 @@ int main() {
         case sf::Event::Closed:
           window.close();
           if (isAutoActive) kill(pid, SIGKILL);
+          interface.writeChanges();
           break;
 
         case sf::Event::LostFocus:

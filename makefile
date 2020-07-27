@@ -38,5 +38,12 @@ $(OBJ_DIR)/whereami.o: ext/whereami/whereami.c ext/whereami/whereami.h
 $(OBJ_DIR)/tinyxml2.o: ext/tinyxml2/tinyxml2.cpp ext/tinyxml2/tinyxml2.h
 	gcc -c $< -o $@
 
+test: test.o obj/tinyxml2.o
+	g++ test.o obj/tinyxml2.o -o $@
+	rm test.o
+
+test.o: test.cpp
+	g++ -c test.cpp -o $@
+
 clean:
 	@$(RM) -rv $(BIN_DIR) $(OBJ_DIR)

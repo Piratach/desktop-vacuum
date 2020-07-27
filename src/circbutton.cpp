@@ -5,7 +5,7 @@
 
 // ctor
 CircButton::CircButton(float x, float y, float inrad, float outrad,
-        sf::Color inCol, sf::Color outCol, bool on) {
+        sf::Color inCol, sf::Color outCol, std::string name, bool on) {
   topLeftX = x;
   topLeftY = y;
   outerRad = outrad;
@@ -14,10 +14,10 @@ CircButton::CircButton(float x, float y, float inrad, float outrad,
   innerCol = inCol;
   changed = false;
   pressed = on;
+  attrName = name;
 
   init();
 }
-
 
 bool CircButton::checkPressed(float x, float y) {
   float value = pow((x - centreX), 2) + pow((y - centreY), 2); 
@@ -55,5 +55,10 @@ void CircButton::init(void) {
 }
 
 // incomplete
-void CircButton::writeChanges(std::string filename) {
+void CircButton::writeChanges(tinyxml2::XMLNode *pRoot) {
+  if (changed) {
+    tinyxml2::XMLElement *pElement = pRoot->FirstChildElement(attrName.c_str());
+    pElement->SetAttribute("pressed", pressed);
+  }
+  return;
 }

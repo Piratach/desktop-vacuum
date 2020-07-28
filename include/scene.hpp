@@ -16,7 +16,7 @@ class Scene {
     int writeChanges(void);
 
     void getMode(TabMode &mode);
-    void loadConfig(std::string resDir);
+    void loadConfig(std::string monitorPath, std::string resPath);
 
     int getWidth(void);
     int getHeight(void);

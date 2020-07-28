@@ -126,7 +126,7 @@ void Directory::closeSaveFile(void) {
 //            and performs the appropriate action
 // returns: 1, if the function has triggered another kevent (moving files)
 //          0, otherwise
-int Directory::autoClean(void) {
+int Directory::autoClean(bool ignoreOthers) {
   std::string fileFound = "";
   newNumFiles = 0;
   bool fileIgnored = false;
@@ -169,7 +169,7 @@ int Directory::autoClean(void) {
     // clean up new file
     std::cout << "Moving new file" << std::endl;
     dirManager[fileFound] = true;
-    int flag = cleanFile(fileFound);
+    int flag = cleanFile(fileFound, ignoreOthers);
     if (flag == -1) { // no move needed
       currNumFiles = newNumFiles;
       return 0;
@@ -225,11 +225,10 @@ void Directory::replaceName(std::string &targetDir, std::string &oldName,
 // returns: 1, if a new directory has been created (+ move)
 //         -1, if no move is needed
 //          0, otherwise (move but no new directory)
-int Directory::cleanFile(std::string fileName) {
+int Directory::cleanFile(std::string fileName, bool ignoreOthers) {
   std::string targetDir = groupings[extension(fileName)].value;
-  if (targetDir == "others") {
+  if (targetDir == "others" && ignoreOthers) {
     // let user decide what to do...
-    // currently, nothing is done so no new directory has been created
     return -1;  
   }
   return move(fileName, targetDir);

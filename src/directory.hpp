@@ -54,7 +54,7 @@ class Directory {
     void closeSaveFile(void);
  
     /** Auto-only functions **/
-    int autoClean(void);
+    int autoClean(bool ignoreOthers);
     void initDirManager(void);
 
   private:
@@ -86,7 +86,7 @@ class Directory {
     int currNumFiles;
     int newNumFiles;
 
-    int cleanFile(std::string fileName);
+    int cleanFile(std::string fileName, bool ignoreOthers);
 
     // check if file existed within immediate directory
     bool fileExists(std::string currFile);

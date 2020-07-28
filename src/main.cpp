@@ -35,16 +35,16 @@ int main() {
   char *path = new char[length + 1];
   wai_getExecutablePath(path, length, NULL);
   path[length] = '\0';
-  std::cout << path << std::endl;
+  // std::cout << path << std::endl;
   fs::path buildPath = fs::path(path).parent_path(); // desktop-vacuum/build
   fs::path dirPath = buildPath.parent_path(); // desktop-vacuum
   fs::path resPath = fs::path(dirPath.string() + "/res");
   fs::path monitorPath = dirPath.parent_path();
-  std::cout << dirPath << std::endl;
-  std::cout << monitorPath << std::endl;
+  // std::cout << dirPath << std::endl;
+  // std::cout << monitorPath << std::endl;
 
   Scene interface;
-  interface.loadConfig(monitorPath);
+  interface.loadConfig(monitorPath, resPath);
 
   int width = interface.getWidth();
   int height = interface.getHeight();
@@ -64,25 +64,29 @@ int main() {
   while (window.isOpen()) {
     sf::Event event;
 
+    /* Separate loop for performing the cleans */
     if (MANUALCLEAN && !isAutoActive) {
-      // cleaner.manualCleanup();
-      std::this_thread::sleep_for(std::chrono::milliseconds(400));
+      interface.writeChanges();
+      cleaner.manualCleanup();
+      // std::this_thread::sleep_for(std::chrono::milliseconds(400));
       interface.finishManualC(MANUALCLEAN);
       EVENTPROCESSED = 1;
     } else if (REVERT && !isAutoActive) {
-      // cleaner.revert();
-      std::this_thread::sleep_for(std::chrono::milliseconds(400));
+      cleaner.revert();
+      // std::this_thread::sleep_for(std::chrono::milliseconds(400));
       interface.finishRevert(REVERT);
       EVENTPROCESSED = 1;
     } else if (AUTOCLEAN) {
       // needs more AUTOCLEAN checks...this case is different
-      std::this_thread::sleep_for(std::chrono::milliseconds(400));
+      // std::this_thread::sleep_for(std::chrono::milliseconds(400));
       if (isAutoActive) {
         // killing running process
+        // "toggle"
         kill(pid, SIGKILL);
         interface.finishAutoC(isAutoActive);
       } else {
         // start autoclean process
+        interface.writeChanges();
         pid = fork();
         if (pid == 0) {
           cleaner.autoCleanup();
@@ -108,61 +112,11 @@ int main() {
           interface.writeChanges();
           break;
 
-        case sf::Event::LostFocus:
-          break;
-
-        case sf::Event::GainedFocus:
-          break;
-
         case sf::Event::MouseButtonPressed:
-            
-          // // interface.getMode(mode); // checking for mode changes
-          // // if mode change -- break? think about this
-          // // because process one event at once
+          // passing in x, y coord and flags
           interface.updateAll(x, y, MANUALCLEAN, REVERT, AUTOCLEAN, 
               isAutoActive);
-
-          // // switch(mode) {
-
-            // // pass x and y into these functions...
-
-            // // case MANUAL:
-              // // perform various checks
-              // // can only have one event at once so if else if else pls
-              // // UI.updateManTab(); // other checks
-              // //
-              // // else:
-              // // if (manualButton.checkPressed(x, y)) {
-                // // MANUALCLEAN = 1;
-              // // }
-              // // break;
-
-            // // case AUTO:
-              // // UI.updateAutoTab();
-              // // else if (autoButton.checkPressed(x, y)) {
-                // // if (!AUTOCLEAN) {
-                // // pid = fork();
-                // // if (pid == 0) {
-                  // // cleaner.autoCleanup();
-                  // // exit(0);
-                // // }
-                // // AUTOCLEAN = 1; // currently autocleaning... 
-                // // // make it so you can only change settings during AUTOCLEAN
-              // // }
-              // // }
-              // // break;
-
-            /** Last two cases need to support adding new fields and scrolling
-             **/
-            // // case GROUPINGS:
-              // // UI.updateGroupTab();
-              // // break;
-
-            // // case IGNORELIST:
-              // // UI.updateIgnoreTab();
-              // // break;
-          // // }
-          break; // end of mousePressed event case
+          break; 
 
         default:
           break;
@@ -171,7 +125,6 @@ int main() {
 
     if (EVENTPROCESSED) {
 
-      // // we need a colour initialiser
       interface.getMode(mode);
       window.clear(bgColour);
       interface.redrawAll(window);

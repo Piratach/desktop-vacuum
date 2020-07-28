@@ -153,10 +153,10 @@ void Scene::updateAll(float x, float y, int &MANUALCLEAN, int &REVERT,
   }
 }
 
-void Scene::loadConfig(std::string monitorPath) {
+void Scene::loadConfig(std::string monitorPath, std::string resPath) {
 
   /* Things needed for Tab.loadConfig */
-  std::string resDir = monitorPath + "/desktop-vacuum/res";
+  std::string resDir = resPath;
   std::string fontPath = resDir + "/OpenSans-Light.ttf";
   sf::Color defaultCol = sf::Color::White;
   sf::Color button2Col = sf::Color(100, 111, 124);

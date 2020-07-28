@@ -58,7 +58,7 @@ int Tab::writeChanges(void) {
 int Tab::loadConfig(std::string filename, std::string monitorPath, sf::Font f,
     sf::Color defaultC, sf::Color button2C) {
 
-  /* tmp variables */
+  /* tmp variables used for initialisation */
   int w, h, x, y, size, r1, r2;
   bool p;
   std::string s;
@@ -76,10 +76,11 @@ int Tab::loadConfig(std::string filename, std::string monitorPath, sf::Font f,
 
   // loading XML
   tinyxml2::XMLDocument xmlDoc;
-  if (xmlDoc.LoadFile(filename.c_str()) != tinyxml2::XML_SUCCESS) {
-    std::cerr << "Error: XML file not found." << std::endl;
-    return -1;
-  }
+  loadXML(xmlDoc, filename);
+  // if (xmlDoc.LoadFile(filename.c_str()) != tinyxml2::XML_SUCCESS) {
+    // std::cerr << "Error: XML file not found." << std::endl;
+    // return -1;
+  // }
 
   // error checking?
   tinyxml2::XMLNode *pRoot = xmlDoc.FirstChild();

@@ -1,5 +1,13 @@
 #include "xmlhelper.hpp"
 
+int loadXML(tinyxml2::XMLDocument &xmlDoc, std::string &name) {
+  if (xmlDoc.LoadFile(name.c_str()) != tinyxml2::XML_SUCCESS) {
+    std::cerr << "Error: XML file not found." << std::endl;
+    return -1;
+  }
+  return 0;
+}
+
 int getTextAttr(tinyxml2::XMLElement *pElement, std::string &s,
     int &size, int &x, int &y) {
   s = pElement->Attribute("displayText");

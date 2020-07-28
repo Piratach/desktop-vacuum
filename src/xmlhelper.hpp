@@ -1,5 +1,8 @@
 #include "tinyxml2/tinyxml2.h"
 #include <string>
+#include <iostream>
+
+int loadXML(tinyxml2::XMLDocument &xmlDoc, std::string &name);
 
 int getTextAttr(tinyxml2::XMLElement *pElement, std::string &s,
     int &size, int &x, int &y);

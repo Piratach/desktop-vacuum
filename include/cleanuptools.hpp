@@ -15,6 +15,7 @@
 #include <unistd.h>      // for close()
 
 #include "directory.hpp"
+#include "xmlhelper.hpp"
 
 class CleanupTools {
 
@@ -26,10 +27,10 @@ class CleanupTools {
     int revert(void);
     int autoCleanup(void);
 
-    int initCurrDir(std::string dirName);
-
   private:
     Directory currDir;
     std::string dirPath, resPath;
+
+    bool getConfig(std::string filename, std::string buttonName);
 
 };

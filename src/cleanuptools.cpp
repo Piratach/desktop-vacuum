@@ -2,8 +2,6 @@
  * cleanuptools.cpp
  * 1. Implementations of the class functions
  *
- * TODO
- * 1. Add auto-cleanup
  *****************************************************************************/
 
 #include "cleanuptools.hpp"
@@ -14,17 +12,6 @@ CleanupTools::CleanupTools (std::string dirName, std::string resName)
   dirPath = dirName;
   resPath = resName;
 };
-
-
-// int CleanupTools::initCurrDir(std::string dirName) {
-  // if (std::filesystem::exists(dirName)) {
-    // std::cout << "Directory " << dirName;
-    // std::cout << " could not be found" << std::endl;
-    // return -1;
-  // }
-  // currDir = Directory(dirName, resName);
-  // return 0;
-// }
 
 /* for now, sort by file extension */
 int CleanupTools::manualCleanup() {
@@ -38,6 +25,8 @@ int CleanupTools::manualCleanup() {
   // initialising save file used for reverting
   currDir.openSaveFile();
 
+  bool ignoreOthers = getConfig("manualConfig.xml", "button1");
+
   // looping through each file in the directory
   for(auto& p: std::filesystem::directory_iterator(dirPath)) {
     std::filesystem::path currPath = p.path();
@@ -48,7 +37,9 @@ int CleanupTools::manualCleanup() {
     } else {
       // TIL c++ does not support str switch statements...
       std::string targetDir = currDir.getTargetDir(currPath);
-      if (targetDir == "others") continue; // will let user decide what to do
+      if (targetDir == "others" && ignoreOthers) {
+        continue;
+      }
       currDir.move(currFile, targetDir, MANUAL);
     }
   }
@@ -70,6 +61,9 @@ int CleanupTools::autoCleanup() {
   int kq = kqueue();
   int dirfd = open(dirPath.c_str(), O_RDONLY);
   int cleaned = 0;
+
+  // loading configs from xml
+  bool ignoreOthers = getConfig("autoConfig.xml", "button1");
 
   // initialising map between file extensions and groups
   currDir.initMap();
@@ -106,9 +100,26 @@ int CleanupTools::autoCleanup() {
     } else {
       // clean up new files and check status of files
       if (cleaned) cleaned = 0;
-      else cleaned = currDir.autoClean();
+      else cleaned = currDir.autoClean(ignoreOthers);
     }
   }
   close(kq);
   return 0;
+}
+
+/**************************** Private Functions *******************************/
+
+// Getting info of a button in the tab 
+bool CleanupTools::getConfig(std::string fileName, std::string buttonName) {
+  bool res;
+  tinyxml2::XMLElement *pElement;
+  tinyxml2::XMLDocument xmlDoc;
+  std::string xmlFilename = resPath + "/" + fileName;
+
+  loadXML(xmlDoc, xmlFilename);
+  tinyxml2::XMLNode *pRoot = xmlDoc.FirstChild();
+  pElement = pRoot->FirstChildElement(buttonName.c_str());
+  pElement->QueryBoolAttribute("pressed", &res);
+
+  return res;
 }

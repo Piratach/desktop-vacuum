@@ -16,6 +16,8 @@ CleanupTools::CleanupTools (std::string dirName, std::string resName)
 /* for now, sort by file extension */
 int CleanupTools::manualCleanup() {
 
+  std::cout << "Manual Cleanup" << std::endl;
+
   // manual mode
   const int MANUAL = 1;
 
@@ -64,6 +66,8 @@ int CleanupTools::autoCleanup() {
 
   // loading configs from xml
   bool ignoreOthers = getConfig("autoConfig.xml", "button1");
+  bool useIgnLst = getConfig("autoConfig.xml", "button2");
+  bool manualClean = getConfig("autoConfig.xml", "button3");
 
   // initialising map between file extensions and groups
   currDir.initMap();
@@ -89,6 +93,11 @@ int CleanupTools::autoCleanup() {
   signal(SIGINT, SIG_IGN);
   // Register the signal event.
   kevent(kq, &sigevent, 1, NULL, 0, NULL);
+
+  /** Depending on the configs, perform one manual clean before listening **/
+  if (manualClean) {
+    manualCleanup();
+  }
 
   while (1) {
     struct kevent change;

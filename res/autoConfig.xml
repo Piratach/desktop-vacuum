@@ -12,6 +12,6 @@
     <text3 displayText="Ignore extensions not in groupings" size="16" x="55" y="88"/>
     <button2 x="25" y="129" inrad="3" outrad="6" pressed="true"/>
     <text4 displayText="Use ignorelist" size="16" x="55" y="124"/>
-    <button3 x="25" y="165" inrad="3" outrad="6" pressed="true"/>
-    <text5 displayText="Only clean up new additions to the directory" size="16" x="55" y="160"/>
+    <button3 x="25" y="165" inrad="3" outrad="6" pressed="false"/>
+    <text5 displayText="Clean up directory once before auto-cleaning" size="16" x="55" y="160"/>
 </Root>

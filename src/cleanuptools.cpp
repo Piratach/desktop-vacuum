@@ -24,6 +24,9 @@ int CleanupTools::manualCleanup() {
   // initialising the map betwen extensions and groups
   currDir.initMap();
 
+  // initialising ignore list
+  currDir.initIgnLst();
+
   // initialising save file used for reverting
   currDir.openSaveFile();
 
@@ -71,6 +74,9 @@ int CleanupTools::autoCleanup() {
 
   // initialising map between file extensions and groups
   currDir.initMap();
+
+  // initialising ignore list
+  currDir.initIgnLst();
 
   // dirManager is used to check status of files in the current directory
   currDir.initDirManager();

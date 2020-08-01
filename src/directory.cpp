@@ -10,7 +10,8 @@
 // ctor
 Directory::Directory(std::string path, std::string res) : 
   mapFileName(res + "/.map.txt"), 
-  saveFileName(res + "/.save.txt") 
+  ignFileName(res + "/.ignoreList.txt"),
+  saveFileName(res + "/.save.txt")
 {
   dirPath = path;
 };
@@ -58,6 +59,23 @@ void Directory::initMap(void) {
   while (infile >> key >> val) {
     groupings[key] = DefaultString(val);
   }
+  infile.close();
+}
+
+void Directory::initIgnLst(void) {
+  std::ifstream infile;
+  infile.open(ignFileName);
+  if (!infile) {
+    std::cerr << "Error opening " << ignFileName;
+    /* TODO: Error handling */
+    return;
+  }
+  std::string key;
+  ignLst.clear();
+  while (infile >> key) {
+    ignLst[key] = true;
+  }
+  infile.close();
 }
 
 // Returns the target directory of a file type by using a map
@@ -104,6 +122,9 @@ int Directory::move(std::string oldName, std::string targetDir, int manual) {
 int Directory::ignore(std::string filePath, std::string fileName) {
   if (fileName[0] == '.' || std::filesystem::is_directory(filePath)) {
     // include ignore list in the future
+    return 1;
+  } else if (ignLst[fileName]) {
+    std::cout << "ignore list" << std::endl;
     return 1;
   }
   return 0;

@@ -43,7 +43,8 @@ class Directory {
     void revert(void);
 
     /** Functions used for Both Modes **/
-    void initMap(void); 
+    void initMap(void);
+    void initIgnLst(void);
     std::string getTargetDir(std::string currPath);
     int move(std::string oldName, std::string targetDir, int manual=0);
     int ignore(std::string filePath, std::string fileName);
@@ -64,6 +65,9 @@ class Directory {
     std::string mapFileName;
     std::string dirPath; // path of dir to monitor
     std::map<std::string, DefaultString> groupings;
+
+    std::string ignFileName;
+    std::map<std::string, bool> ignLst;
 
     // used when target directory already contains file of the same name
     void replaceName(std::string &targetDir, std::string &oldName,

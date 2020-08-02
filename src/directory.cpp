@@ -116,15 +116,16 @@ int Directory::move(std::string oldName, std::string targetDir, int manual) {
   return flag;
 }
 
-// ignore: checks whether or not to move the file
+// ignore: checks whether or not to move the file without checking the 
+//         corresponding file extension
 // returns: 1, if file should be ignored
 //          0, otherwise
-int Directory::ignore(std::string filePath, std::string fileName) {
+int Directory::ignore(std::string filePath, std::string fileName, 
+    bool checkIgnLst) {
   if (fileName[0] == '.' || std::filesystem::is_directory(filePath)) {
     // include ignore list in the future
     return 1;
-  } else if (ignLst[fileName]) {
-    std::cout << "ignore list" << std::endl;
+  } else if (checkIgnLst && ignLst[fileName]) {
     return 1;
   }
   return 0;
@@ -147,7 +148,7 @@ void Directory::closeSaveFile(void) {
 //            and performs the appropriate action
 // returns: 1, if the function has triggered another kevent (moving files)
 //          0, otherwise
-int Directory::autoClean(bool ignoreOthers) {
+int Directory::autoClean(bool ignoreOthers, bool checkIgnLst) {
   std::string fileFound = "";
   newNumFiles = 0;
   bool fileIgnored = false;
@@ -158,7 +159,7 @@ int Directory::autoClean(bool ignoreOthers) {
     if (!fileExists(currFile)) {
 
       // if new file added should be ignored
-      if (ignore(currPath, currFile)) {
+      if (ignore(currPath, currFile, checkIgnLst)) {
         dirManager[currFile] = true; // add to the ok map
         removalCheck(); // in the case of renamings
         fileIgnored = true;
@@ -180,7 +181,6 @@ int Directory::autoClean(bool ignoreOthers) {
   // we are now casing on number of files to check for renamings
   if (currNumFiles == newNumFiles) {
     // file renamed
-    std::cout << "Renaming" << std::endl;
     dirManager[fileFound] = true;
     removalCheck(); // remove old name from dirManager
     return 0; // kevent not triggered
@@ -188,7 +188,6 @@ int Directory::autoClean(bool ignoreOthers) {
   // find a better way to do this :(
   } else if (currNumFiles < newNumFiles) {
     // clean up new file
-    std::cout << "Moving new file" << std::endl;
     dirManager[fileFound] = true;
     int flag = cleanFile(fileFound, ignoreOthers);
     if (flag == -1) { // no move needed
@@ -198,13 +197,11 @@ int Directory::autoClean(bool ignoreOthers) {
     } else if (flag == 1) { // new dir created
       currNumFiles = newNumFiles;
     }
-    std::cout << "end2: " << currNumFiles << std::endl;
     dirManager[fileFound] = false;
     return 1; // kevent triggered
 
   } else { 
     // file removal
-    std::cout << "Bye bye!" << std::endl;
     if (fileFound != "") {
       std::cerr << "File " << fileFound << " seems to have been removed";
       std::cerr << " but is not." << std::endl;
@@ -212,7 +209,6 @@ int Directory::autoClean(bool ignoreOthers) {
     }
     // update dirManager
     removalCheck(); 
-    std::cout << "end3: " << currNumFiles << std::endl;
     return 0; // kevent not triggered
   }
 }

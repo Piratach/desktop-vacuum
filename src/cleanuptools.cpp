@@ -31,16 +31,17 @@ int CleanupTools::manualCleanup() {
   currDir.openSaveFile();
 
   bool ignoreOthers = getConfig("manualConfig.xml", "button1");
+  bool checkIgnLst = getConfig("manualConfig.xml", "button2");
 
   // looping through each file in the directory
   for(auto& p: std::filesystem::directory_iterator(dirPath)) {
     std::filesystem::path currPath = p.path();
     std::string currFile = currPath.filename();
-    if (currDir.ignore(currPath, currFile)) {
-      // ignore hidden files and directories
+    if (currDir.ignore(currPath, currFile, checkIgnLst)) {
+      // ignore hidden files and directories or files included in the
+      // ignoreList
       continue;
     } else {
-      // TIL c++ does not support str switch statements...
       std::string targetDir = currDir.getTargetDir(currPath);
       if (targetDir == "others" && ignoreOthers) {
         continue;
@@ -69,7 +70,7 @@ int CleanupTools::autoCleanup() {
 
   // loading configs from xml
   bool ignoreOthers = getConfig("autoConfig.xml", "button1");
-  bool useIgnLst = getConfig("autoConfig.xml", "button2");
+  bool checkIgnLst = getConfig("autoConfig.xml", "button2");
   bool manualClean = getConfig("autoConfig.xml", "button3");
 
   // initialising map between file extensions and groups
@@ -115,7 +116,7 @@ int CleanupTools::autoCleanup() {
     } else {
       // clean up new files and check status of files
       if (cleaned) cleaned = 0;
-      else cleaned = currDir.autoClean(ignoreOthers);
+      else cleaned = currDir.autoClean(ignoreOthers, checkIgnLst);
     }
   }
   close(kq);

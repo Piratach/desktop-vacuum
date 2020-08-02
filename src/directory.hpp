@@ -47,7 +47,7 @@ class Directory {
     void initIgnLst(void);
     std::string getTargetDir(std::string currPath);
     int move(std::string oldName, std::string targetDir, int manual=0);
-    int ignore(std::string filePath, std::string fileName);
+    int ignore(std::string filePath, std::string fileName, bool checkIgnLst);
 
     /** Manual-only Functions **
      *  Writes to a save file that is used in revert */
@@ -55,7 +55,7 @@ class Directory {
     void closeSaveFile(void);
  
     /** Auto-only functions **/
-    int autoClean(bool ignoreOthers);
+    int autoClean(bool ignoreOthers, bool checkIgnLst);
     void initDirManager(void);
 
   private:

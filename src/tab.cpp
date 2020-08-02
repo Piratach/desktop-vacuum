@@ -56,7 +56,7 @@ int Tab::writeChanges(void) {
 /******************************* Incomplete  **********************************/
 
 int Tab::loadConfig(std::string filename, std::string monitorPath, sf::Font f,
-    sf::Color defaultC, sf::Color button2C) {
+    sf::Color defaultC, sf::Color lightButtonC) {
 
   /* tmp variables used for initialisation */
   int w, h, x, y, size, r1, r2;
@@ -72,7 +72,7 @@ int Tab::loadConfig(std::string filename, std::string monitorPath, sf::Font f,
 
   font = f;
   sf::Color defaultCol = defaultC;
-  sf::Color button2Col = button2C;
+  sf::Color lightButtonCol = lightButtonC;
 
   // loading XML
   tinyxml2::XMLDocument xmlDoc;
@@ -138,7 +138,7 @@ int Tab::loadConfig(std::string filename, std::string monitorPath, sf::Font f,
       pElement = pRoot->FirstChildElement("button1");
       getButtonAttr(pElement, x, y, r1, r2, p);
       CircButton button1(x, y, r1, r2, defaultCol, 
-          button2Col, "button1", p); 
+          lightButtonCol, "button1", p); 
       circButtonArray.push_back(button1);
 
       pElement = pRoot->FirstChildElement("text3");
@@ -151,7 +151,7 @@ int Tab::loadConfig(std::string filename, std::string monitorPath, sf::Font f,
       pElement = pRoot->FirstChildElement("button2");
       getButtonAttr(pElement, x, y, r1, r2, p);
       CircButton button2(x, y, r1, r2, defaultCol, 
-          button2Col, "button2", p); 
+          lightButtonCol, "button2", p); 
       circButtonArray.push_back(button2);
 
       pElement = pRoot->FirstChildElement("text4");
@@ -219,7 +219,7 @@ int Tab::loadConfig(std::string filename, std::string monitorPath, sf::Font f,
       pElement = pRoot->FirstChildElement("button1");
       getButtonAttr(pElement, x, y, r1, r2, p);
       CircButton button1(x, y, r1, r2, defaultCol, 
-          button2Col, "button1", p); 
+          lightButtonCol, "button1", p); 
       circButtonArray.push_back(button1);
 
       pElement = pRoot->FirstChildElement("text3");
@@ -232,7 +232,7 @@ int Tab::loadConfig(std::string filename, std::string monitorPath, sf::Font f,
       pElement = pRoot->FirstChildElement("button2");
       getButtonAttr(pElement, x, y, r1, r2, p);
       CircButton button2(x, y, r1, r2, defaultCol, 
-          button2Col, "button2", p); 
+          lightButtonCol, "button2", p); 
       circButtonArray.push_back(button2);
 
       pElement = pRoot->FirstChildElement("text4");
@@ -245,7 +245,7 @@ int Tab::loadConfig(std::string filename, std::string monitorPath, sf::Font f,
       pElement = pRoot->FirstChildElement("button3");
       getButtonAttr(pElement, x, y, r1, r2, p);
       CircButton button3(x, y, r1, r2, defaultCol, 
-          button2Col, "button3", p); 
+          lightButtonCol, "button3", p); 
       circButtonArray.push_back(button3);
 
       pElement = pRoot->FirstChildElement("text5");
@@ -260,42 +260,67 @@ int Tab::loadConfig(std::string filename, std::string monitorPath, sf::Font f,
 
     /* Groupings tab! */
     case GROUPINGS: {
-      topLeftX = 118;
-      topLeftY = 0;
-      width = 87;
-      height = 32;
 
-      leftTabLine.setSize(sf::Vector2f(1, 30));
-      leftTabLine.setFillColor(sf::Color::White);
-      leftTabLine.setPosition(118, 2);
+      pElement = pRoot->FirstChildElement("topLeftX");
+      pElement->QueryIntText(&topLeftX);
 
-      rightTabLine.setSize(sf::Vector2f(1, 30));
-      rightTabLine.setFillColor(sf::Color::White);
-      rightTabLine.setPosition(205, 2);
+      pElement = pRoot->FirstChildElement("topLeftY");
+      pElement->QueryIntText(&topLeftY);
 
-      left = 118;
-      right = 205;
+      pElement = pRoot->FirstChildElement("width");
+      pElement->QueryIntText(&width);
 
-     break; 
+      pElement = pRoot->FirstChildElement("height");
+      pElement->QueryIntText(&height);
+
+      pElement = pRoot->FirstChildElement("leftTabLine");
+      getTabLineAttr(pElement, w, h, x, y);
+      leftTabLine.setSize(sf::Vector2f(w, h));
+      leftTabLine.setFillColor(defaultCol);
+      leftTabLine.setPosition(x, y);
+
+      pElement = pRoot->FirstChildElement("rightTabLine");
+      getTabLineAttr(pElement, w, h, x, y);
+      rightTabLine.setSize(sf::Vector2f(w, h));
+      rightTabLine.setFillColor(defaultCol);
+      rightTabLine.setPosition(x, y);
+
+      left = topLeftX;
+      right = topLeftX + width;
+
+      break; 
     }
 
     /* Ignorelist tab! */
     case IGNORELST: {
-      topLeftX = 205;
-      topLeftY = 0;
-      width = 79;
-      height = 32;
 
-      leftTabLine.setSize(sf::Vector2f(1, 30));
-      leftTabLine.setFillColor(sf::Color::White);
-      leftTabLine.setPosition(205, 2);
+      pElement = pRoot->FirstChildElement("topLeftX");
+      pElement->QueryIntText(&topLeftX);
 
-      rightTabLine.setSize(sf::Vector2f(1, 30));
-      rightTabLine.setFillColor(sf::Color::White);
-      rightTabLine.setPosition(284, 2);
+      pElement = pRoot->FirstChildElement("topLeftY");
+      pElement->QueryIntText(&topLeftY);
 
-      left = 205;
-      right = 284;
+      pElement = pRoot->FirstChildElement("width");
+      pElement->QueryIntText(&width);
+
+      pElement = pRoot->FirstChildElement("height");
+      pElement->QueryIntText(&height);
+
+      pElement = pRoot->FirstChildElement("leftTabLine");
+      getTabLineAttr(pElement, w, h, x, y);
+      leftTabLine.setSize(sf::Vector2f(w, h));
+      leftTabLine.setFillColor(defaultCol);
+      leftTabLine.setPosition(x, y);
+
+      pElement = pRoot->FirstChildElement("rightTabLine");
+      getTabLineAttr(pElement, w, h, x, y);
+      rightTabLine.setSize(sf::Vector2f(w, h));
+      rightTabLine.setFillColor(defaultCol);
+      rightTabLine.setPosition(x, y);
+
+      left = topLeftX;
+      right = topLeftX + width;
+
       break; 
     }
   }

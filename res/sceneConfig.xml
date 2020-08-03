@@ -1,0 +1,26 @@
+<Root>
+    <defaultCol r="255" g="255" b="255"/>
+    <buttonCol r="36" g="50" b="84"/>
+    <lightButtonCol r="100" g="111" b="114"/>
+    <width>510</width>
+    <height>290</height>
+    <tabHeight>31</tabHeight>
+    <bgColour r="38" g="45" b="58"/>
+    <lesserBgColour r="50" g="60" b="70"/>
+
+    <manualButton x="40" y="240" w="160" h="30" idleText="Manual Cleanup" 
+      activeText="Cleaning..." fontSize="14"/>
+    <!-- x is an offset -->
+    <revertButton x="200" y="240" w="160" h="30" idleText="Revert Changes" 
+      activeText="Reverting..." fontSize="14"/>
+    <autoButton x="86" y="240" w="160" h="30" idleText="Auto Cleanup" 
+      activeText="Auto Cleaning..." fontSize="14"/>
+
+    <upperTabLine width="1" height="30" x="69" y="2"/>
+    <tabLineL x="0" y="31"/>
+    <tabLineR width="0" height="0" x="0" y="0"/>
+    <manualText displayText="Manual" size="16" x="6" y="5"/>
+    <autoText displayText="Auto" size="16" x="76" y="5"/>
+    <groupText displayText="Groupings" size="16" x="124" y="5"/>
+    <ignoreText displayText="Ignorelist" size="16" x="210" y="5"/>
+</Root>

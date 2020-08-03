@@ -9,5 +9,5 @@ obj/*
 build/*
 
 # config files
-res/*.xml
-*.xml
+# res/*.xml
+# *.xml

@@ -62,6 +62,14 @@ int Scene::getHeight(void) {
   return height;
 }
 
+int Scene::getWidth2(void) {
+  return width2;
+}
+
+int Scene::getHeight2(void) {
+  return height2;
+}
+
 sf::Color Scene::getBgColour(void) {
   return bgColour;
 }
@@ -111,7 +119,7 @@ bool Scene::modeChange(float x, float y) {
 }
 
 void Scene::updateAll(float x, float y, int &MANUALCLEAN, int &REVERT, 
-    int &AUTOCLEAN, int isAutoActive)  {
+    int &AUTOCLEAN, int isAutoActive, int &MODECHANGED)  {
   // assert(MANUALCLEAN == 0);
   // assert(REVERT == 0);
   // assert(AUTOCLEAN == 0);
@@ -150,6 +158,8 @@ void Scene::updateAll(float x, float y, int &MANUALCLEAN, int &REVERT,
         break;
       }
     }
+  } else {
+    MODECHANGED = 1;
   }
 }
 
@@ -194,6 +204,12 @@ void Scene::loadConfig(std::string monitorPath, std::string resPath) {
 
   pElement = pRoot->FirstChildElement("tabHeight");
   pElement->QueryIntText(&tabHeight);
+
+  pElement = pRoot->FirstChildElement("width2");
+  pElement->QueryIntText(&width2);
+
+  pElement = pRoot->FirstChildElement("height2");
+  pElement->QueryIntText(&height2);
 
   // dark blue
   pElement = pRoot->FirstChildElement("bgColour");

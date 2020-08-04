@@ -288,6 +288,13 @@ int Tab::loadConfig(std::string filename, std::string monitorPath, sf::Font f,
       left = topLeftX;
       right = topLeftX + width;
 
+      sf::Text text1(".jpg ======> jpg", font, 16);
+      text1.setFillColor(defaultCol);
+      text1.setPosition(25, 52);
+      textArray.push_back(text1);
+
+
+
       break; 
     }
 

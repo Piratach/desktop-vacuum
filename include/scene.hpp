@@ -12,7 +12,7 @@ class Scene {
 
     void redrawAll(sf::RenderWindow &window);
     void updateAll(float x, float y, int &MANUALCLEAN, 
-        int &REVERT, int &AUTOCLEAN, int isAutoActive);
+        int &REVERT, int &AUTOCLEAN, int isAutoActive, int &MODECHANGED);
     int writeChanges(void);
 
     void getMode(TabMode &mode);
@@ -21,6 +21,8 @@ class Scene {
     int getWidth(void);
     int getHeight(void);
     sf::Color getBgColour(void);
+    int getWidth2(void);
+    int getHeight2(void);
 
     void finishManualC(int &MANUALCLEAN);
     void finishRevert(int &REVERT);
@@ -31,6 +33,7 @@ class Scene {
     TabMode mode; 
     sf::Font font;
     int width, height; //of screen
+    int width2, height2; // resized screen for groupings and ignorelist
     int tabHeight;
     sf::Color bgColour, lesserBgColour;
 

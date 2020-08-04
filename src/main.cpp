@@ -20,13 +20,15 @@ namespace fs = std::filesystem;
 
 int main() {
 
+  // FLAGS
   int pid;
   TabMode mode = MANUAL;
   int MANUALCLEAN = 0;
   int REVERT = 0;
   int AUTOCLEAN = 0; // activate everytime button pressed
   int EVENTPROCESSED = 1; // start off by drawing the base
-  
+  int MODECHANGED = 0;
+
   int isAutoActive= 0;  
 
   // desktop-vacuum/src/main.cpp
@@ -35,24 +37,30 @@ int main() {
   char *path = new char[length + 1];
   wai_getExecutablePath(path, length, NULL);
   path[length] = '\0';
-  // std::cout << path << std::endl;
   fs::path buildPath = fs::path(path).parent_path(); // desktop-vacuum/build
   fs::path dirPath = buildPath.parent_path(); // desktop-vacuum
   fs::path resPath = fs::path(dirPath.string() + "/res");
   fs::path monitorPath = dirPath.parent_path();
-  // std::cout << dirPath << std::endl;
-  // std::cout << monitorPath << std::endl;
 
   Scene interface;
   interface.loadConfig(monitorPath, resPath);
 
+  /* Loading window-related values */
   int width = interface.getWidth();
   int height = interface.getHeight();
   sf::Color bgColour = interface.getBgColour();
-  
+  int width2 = interface.getWidth2();
+  int height2 = interface.getHeight2();
+
+  /* Window initialisation */
   sf::RenderWindow window(sf::VideoMode(width, height), "Cleanup",
       sf::Style::Titlebar | sf::Style::Close);
   window.setVerticalSyncEnabled(true);
+
+  sf::View view1(sf::FloatRect(0.f, 0.f, width, height));
+  sf::View view2(sf::FloatRect(0.f, 0.f, width2, height2));
+  sf::Vector2i pos;
+  
 
   // [>* Cleaner *<]
 
@@ -115,7 +123,7 @@ int main() {
         case sf::Event::MouseButtonPressed:
           // passing in x, y coord and flags
           interface.updateAll(x, y, MANUALCLEAN, REVERT, AUTOCLEAN, 
-              isAutoActive);
+              isAutoActive, MODECHANGED);
           break; 
 
         default:
@@ -128,6 +136,21 @@ int main() {
       interface.getMode(mode);
       window.clear(bgColour);
       interface.redrawAll(window);
+
+      // new tab has been selected
+      if (MODECHANGED) {
+        pos = window.getPosition();
+        if (mode == GROUPINGS ||mode == IGNORELST) {
+          window.setSize(sf::Vector2u(width2, height2));
+          window.setView(view2);
+          window.setPosition(pos);
+        } else {
+          window.setSize(sf::Vector2u(width, height));
+          window.setView(view1);
+          window.setPosition(pos);
+        }
+        MODECHANGED = 0;
+      }
 
       window.display();
       EVENTPROCESSED = 0;

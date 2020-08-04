@@ -130,7 +130,7 @@ bool CleanupTools::getConfig(std::string fileName, std::string buttonName) {
   bool res;
   tinyxml2::XMLElement *pElement;
   tinyxml2::XMLDocument xmlDoc;
-  std::string xmlFilename = resPath + "/" + fileName;
+  std::string xmlFilename = resPath + "/conf/" + fileName;
 
   loadXML(xmlDoc, xmlFilename);
   tinyxml2::XMLNode *pRoot = xmlDoc.FirstChild();

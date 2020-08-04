@@ -4,6 +4,8 @@
     <lightButtonCol r="100" g="111" b="114"/>
     <width>510</width>
     <height>290</height>
+    <width2>284</width2>
+    <height2>400</height2>
     <tabHeight>31</tabHeight>
     <bgColour r="38" g="45" b="58"/>
     <lesserBgColour r="50" g="60" b="70"/>

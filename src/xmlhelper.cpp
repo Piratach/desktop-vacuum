@@ -40,8 +40,8 @@ int getButtonAttr(tinyxml2::XMLElement *pElement, int &x, int &y, int &w,
     int &h, std::string &s1, std::string &s2, int &fontSize) {
   pElement->QueryIntAttribute("x", &x);
   pElement->QueryIntAttribute("y", &y);
-  pElement->QueryIntAttribute("width", &w);
-  pElement->QueryIntAttribute("height", &h);
+  pElement->QueryIntAttribute("w", &w);
+  pElement->QueryIntAttribute("h", &h);
   s1 = pElement->Attribute("idleText");
   s2 = pElement->Attribute("activeText");
   pElement->QueryIntAttribute("fontSize", &fontSize);

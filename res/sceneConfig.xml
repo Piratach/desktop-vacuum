@@ -16,9 +16,9 @@
     <autoButton x="86" y="240" w="160" h="30" idleText="Auto Cleanup" 
       activeText="Auto Cleaning..." fontSize="14"/>
 
-    <upperTabLine width="1" height="30" x="69" y="2"/>
-    <tabLineL x="0" y="31"/>
-    <tabLineR width="0" height="0" x="0" y="0"/>
+    <upperTabLine width="510" height="2" x="0" y="0"/>
+    <tabLineL width="0" height="0" x="0" y="31"/>
+    <tabLineR width="0" height="1" x="0" y="31"/>
     <manualText displayText="Manual" size="16" x="6" y="5"/>
     <autoText displayText="Auto" size="16" x="76" y="5"/>
     <groupText displayText="Groupings" size="16" x="124" y="5"/>

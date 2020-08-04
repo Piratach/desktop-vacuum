@@ -8,6 +8,5 @@ obj/*
 # builds
 build/*
 
-# config files
-# res/*.xml
-# *.xml
+# archived files
+archived/*

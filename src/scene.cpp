@@ -158,24 +158,50 @@ void Scene::loadConfig(std::string monitorPath, std::string resPath) {
   /* Things needed for Tab.loadConfig */
   std::string resDir = resPath;
   std::string fontPath = resDir + "/OpenSans-Light.ttf";
-  sf::Color defaultCol = sf::Color::White;
-  sf::Color button2Col = sf::Color(100, 111, 124);
+  std::string confPath = resDir + "/sceneConfig.xml";
+
+  /* XML Document variables */
+  tinyxml2::XMLDocument xmlDoc;
+  loadXML(xmlDoc, confPath);
+  tinyxml2::XMLNode *pRoot = xmlDoc.FirstChild();
+  tinyxml2::XMLElement *pElement;
+
+  // temporary variables used to load data
+  int r, g, b;
+  int x, y, w, h, fontSize;
+  std::string s1, s2;
+
+  pElement = pRoot->FirstChildElement("defaultCol");
+  getColour(pElement, r, g, b);
+  sf::Color defaultCol = sf::Color(r, g, b);
+
+  pElement = pRoot->FirstChildElement("buttonCol");
+  getColour(pElement, r, g, b);
+  sf::Color buttonCol = sf::Color(r, g, b);
+
+  pElement = pRoot->FirstChildElement("lightButtonCol");
+  getColour(pElement, r, g, b);
+  sf::Color lightButtonCol = sf::Color(r, g, b);
 
   /* start off at manual */
   mode = MANUAL;
-  width = 510;
-  height = 290;
-  tabHeight = 31;
+
+  pElement = pRoot->FirstChildElement("width");
+  pElement->QueryIntText(&width);
+
+  pElement = pRoot->FirstChildElement("height");
+  pElement->QueryIntText(&height);
+
+  pElement = pRoot->FirstChildElement("tabHeight");
+  pElement->QueryIntText(&tabHeight);
 
   // dark blue
-  bgColour.r = 38;
-  bgColour.g = 45;
-  bgColour.b = 58;
+  pElement = pRoot->FirstChildElement("bgColour");
+  getColour(pElement, bgColour.r, bgColour.g, bgColour.b);
 
   // lighter shade of blue
-  lesserBgColour.r = 50;
-  lesserBgColour.g = 60;
-  lesserBgColour.b = 70;
+  pElement = pRoot->FirstChildElement("lesserBgColour");
+  getColour(pElement, lesserBgColour.r, lesserBgColour.g, lesserBgColour.b);
 
   // loading fonts
   if (!font.loadFromFile(fontPath)) {
@@ -186,69 +212,89 @@ void Scene::loadConfig(std::string monitorPath, std::string resPath) {
 
   /* Load & init 4 different tabs */
   manualTab.loadConfig(resDir + "/manualConfig.xml", monitorPath, font,
-      defaultCol, button2Col);
+      defaultCol, lightButtonCol);
   autoTab.loadConfig(resDir + "/autoConfig.xml", monitorPath, font,
-      defaultCol, button2Col);
+      defaultCol, lightButtonCol);
   grpTab.loadConfig(resDir + "/grpConfig.xml", monitorPath, font,
-      defaultCol, button2Col);
+      defaultCol, lightButtonCol);
   ignTab.loadConfig(resDir + "/ignConfig.xml", monitorPath, font,
-      defaultCol, button2Col);
+      defaultCol, lightButtonCol);
 
   /* The 3 function buttons */
-  manualButton.setAttr(40, 240, 160, 30, sf::Color(36, 50, 84), 
-      lesserBgColour, "Manual Cleanup",
-      "Cleaning...", font, 14);
 
-  revertButton.setAttr(width - 200, 240, 160, 30, sf::Color(36, 50, 84), 
-      lesserBgColour, "Revert Changes",
-      "Reverting...", font, 14);
+  pElement = pRoot->FirstChildElement("manualButton");
+  getButtonAttr(pElement, x, y, w, h, s1, s2, fontSize);
+  manualButton.setAttr(x, y, w, h, buttonCol, lesserBgColour, s1, s2,
+      font, fontSize);
 
-  autoButton.setAttr(width/2 - 86, 240, 160, 30, sf::Color(36, 50, 84), 
-      lesserBgColour, "Auto Cleanup",
-      "Auto Cleaning...", font, 14);
+  // x is an offset
+  pElement = pRoot->FirstChildElement("revertButton");
+  getButtonAttr(pElement, x, y, w, h, s1, s2, fontSize);
+  revertButton.setAttr(width - x, y, w, h, buttonCol, lesserBgColour, s1, s2,
+      font, fontSize);
+
+  // x is an offset
+  pElement = pRoot->FirstChildElement("autoButton");
+  getButtonAttr(pElement, x, y, w, h, s1, s2, fontSize);
+  autoButton.setAttr(width/2 - x, y, w, h, buttonCol, lesserBgColour, s1, s2,
+      font, fontSize);
 
   /* Lines above and below the tabs */
-  upperTabLine.setSize(sf::Vector2f(width, 2));
+  pElement = pRoot->FirstChildElement("upperTabLine");
+  getTabLineAttr(pElement, w, h, x, y);
+  upperTabLine.setSize(sf::Vector2f(w, h));
   upperTabLine.setFillColor(bgColour);
   upperTabLine.setFillColor(sf::Color::Black);
-  upperTabLine.setPosition(0, 0);
+  upperTabLine.setPosition(x, y);
 
-  tabLineL.setPosition(0, 31);
+  pElement = pRoot->FirstChildElement("tabLineL");
+  getTabLineAttr(pElement, w, h, x, y);
+  tabLineL.setPosition(x, y);
   tabLineL.setFillColor(sf::Color::White);
 
-  tabLineR.setSize(sf::Vector2f(width - manualTab.right, 1));
-  tabLineR.setPosition(manualTab.right, 31);
+  pElement = pRoot->FirstChildElement("tabLineR");
+  getTabLineAttr(pElement, w, h, x, y);
+  tabLineR.setSize(sf::Vector2f(width - manualTab.right, h));
+  tabLineR.setPosition(manualTab.right, y);
   tabLineR.setFillColor(sf::Color::White);
 
   /* Tab names */
   sf::Text manualText, autoText, groupText, ignoreText;
 
+  pElement = pRoot->FirstChildElement("manualText");
+  getTextAttr(pElement, s1, fontSize, x, y);
   manualText.setFont(font);
-  manualText.setString("Manual");
-  manualText.setCharacterSize(16);
+  manualText.setString(s1);
+  manualText.setCharacterSize(fontSize);
   manualText.setFillColor(sf::Color::White);
-  manualText.setPosition(6, 5);
+  manualText.setPosition(x, y);
   tabNameArray.push_back(manualText);
 
+  pElement = pRoot->FirstChildElement("autoText");
+  getTextAttr(pElement, s1, fontSize, x, y);
   autoText.setFont(font);
-  autoText.setString("Auto");
-  autoText.setCharacterSize(16);
+  autoText.setString(s1);
+  autoText.setCharacterSize(fontSize);
   autoText.setFillColor(sf::Color::White);
-  autoText.setPosition(76, 5);
+  autoText.setPosition(x, y);
   tabNameArray.push_back(autoText);
 
+  pElement = pRoot->FirstChildElement("groupText");
+  getTextAttr(pElement, s1, fontSize, x, y);
   groupText.setFont(font);
-  groupText.setString("Groupings");
-  groupText.setCharacterSize(16);
+  groupText.setString(s1);
+  groupText.setCharacterSize(fontSize);
   groupText.setFillColor(sf::Color::White);
-  groupText.setPosition(124, 5);
+  groupText.setPosition(x, y);
   tabNameArray.push_back(groupText);
 
+  pElement = pRoot->FirstChildElement("ignoreText");
+  getTextAttr(pElement, s1, fontSize, x, y);
   ignoreText.setFont(font);
-  ignoreText.setString("Ignorelist");
-  ignoreText.setCharacterSize(16);
+  ignoreText.setString(s1);
+  ignoreText.setCharacterSize(fontSize);
   ignoreText.setFillColor(sf::Color::White);
-  ignoreText.setPosition(210, 5);
+  ignoreText.setPosition(x, y);
   tabNameArray.push_back(ignoreText);
 }
 

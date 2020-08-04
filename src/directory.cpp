@@ -9,8 +9,8 @@
 
 // ctor
 Directory::Directory(std::string path, std::string res) : 
-  mapFileName(res + "/.map.txt"), 
-  ignFileName(res + "/.ignoreList.txt"),
+  mapFileName(res + "/groupings.txt"), 
+  ignFileName(res + "/ignoreList.txt"),
   saveFileName(res + "/.save.txt")
 {
   dirPath = path;

@@ -158,7 +158,7 @@ void Scene::loadConfig(std::string monitorPath, std::string resPath) {
   /* Things needed for Tab.loadConfig */
   std::string resDir = resPath;
   std::string fontPath = resDir + "/OpenSans-Light.ttf";
-  std::string confPath = resDir + "/sceneConfig.xml";
+  std::string confPath = resDir + "/conf/sceneConfig.xml";
 
   /* XML Document variables */
   tinyxml2::XMLDocument xmlDoc;
@@ -211,13 +211,13 @@ void Scene::loadConfig(std::string monitorPath, std::string resPath) {
   }
 
   /* Load & init 4 different tabs */
-  manualTab.loadConfig(resDir + "/manualConfig.xml", monitorPath, font,
+  manualTab.loadConfig(resDir + "/conf/manualConfig.xml", monitorPath, font,
       defaultCol, lightButtonCol);
-  autoTab.loadConfig(resDir + "/autoConfig.xml", monitorPath, font,
+  autoTab.loadConfig(resDir + "/conf/autoConfig.xml", monitorPath, font,
       defaultCol, lightButtonCol);
-  grpTab.loadConfig(resDir + "/grpConfig.xml", monitorPath, font,
+  grpTab.loadConfig(resDir + "/conf/grpConfig.xml", monitorPath, font,
       defaultCol, lightButtonCol);
-  ignTab.loadConfig(resDir + "/ignConfig.xml", monitorPath, font,
+  ignTab.loadConfig(resDir + "/conf/ignConfig.xml", monitorPath, font,
       defaultCol, lightButtonCol);
 
   /* The 3 function buttons */

@@ -110,6 +110,7 @@ bool Scene::modeChange(float x, float y) {
     return true;
   } else if (ignTab.checkPressed(x, y)) {
     mode = IGNORELST;
+    ignTab.loadIgnoreLst(startTextX, startTextY, space);
     tabLineL.setSize(sf::Vector2f(ignTab.left, 1));
     tabLineR.setSize(sf::Vector2f(width - ignTab.right, 1));
     tabLineR.setPosition(ignTab.right, tabHeight);
@@ -120,9 +121,7 @@ bool Scene::modeChange(float x, float y) {
 
 void Scene::updateAll(float x, float y, int &MANUALCLEAN, int &REVERT, 
     int &AUTOCLEAN, int isAutoActive, int &MODECHANGED)  {
-  // assert(MANUALCLEAN == 0);
-  // assert(REVERT == 0);
-  // assert(AUTOCLEAN == 0);
+  // assert(MANUALCLEAN == 0) && assert(REVERT == 0) && assert(AUTOCLEAN == 0);
 
   // take into account button presses
   if (!modeChange(x, y)) {
@@ -210,6 +209,15 @@ void Scene::loadConfig(std::string monitorPath, std::string resPath) {
 
   pElement = pRoot->FirstChildElement("height2");
   pElement->QueryIntText(&height2);
+
+  pElement = pRoot->FirstChildElement("startTextX");
+  pElement->QueryIntText(&startTextX);
+
+  pElement = pRoot->FirstChildElement("startTextY");
+  pElement->QueryIntText(&startTextY);
+
+  pElement = pRoot->FirstChildElement("space");
+  pElement->QueryIntText(&space);
 
   // dark blue
   pElement = pRoot->FirstChildElement("bgColour");

@@ -53,7 +53,36 @@ int Tab::writeChanges(void) {
   return 0;
 }
 
-/******************************* Incomplete  **********************************/
+/* For ignoreLst tab ONLY */
+int Tab::loadIgnoreLst(int x, int y, int space) {
+  std::string ignoreLst = monitorDir + "/desktop-vacuum/res/ignoreList.txt";
+  textArray.clear();
+  std::ifstream infile;
+  infile.open(ignoreLst);
+  if (!infile) {
+    std::cerr << "Error opening " << ignoreLst;
+    return -1;
+  }
+
+  std::string filename;
+  while (infile >> filename) {
+    sf::Text text(filename, font, 16); // universal size is 16
+    text.setFillColor(sf::Color::White);
+    text.setPosition(x, y);
+    textArray.push_back(text);
+    y = y + space;
+  }
+
+  if (textArray.empty()) {
+    sf::Text text("Ignorelist is empty!", font, 16);
+    text.setPosition(x, y);
+    textArray.push_back(text);
+  }
+  infile.close();
+  return 0;
+}
+
+/************************ Config Loading Functions ***************************/
 
 int Tab::loadConfig(std::string filename, std::string monitorPath, sf::Font f,
     sf::Color defaultC, sf::Color lightButtonC) {
@@ -205,7 +234,8 @@ int Tab::loadConfig(std::string filename, std::string monitorPath, sf::Font f,
       text1.setPosition(x, y);
       textArray.push_back(text1);
 
-      if (monitorDir.length() >= maxCWDLen) monitorDir = dirNameOnly(monitorDir); 
+      if (monitorDir.length() >= maxCWDLen) 
+        monitorDir = dirNameOnly(monitorDir); 
 
       pElement = pRoot->FirstChildElement("text2");
       getTextAttr(pElement, size, x, y);
@@ -292,8 +322,6 @@ int Tab::loadConfig(std::string filename, std::string monitorPath, sf::Font f,
       text1.setFillColor(defaultCol);
       text1.setPosition(25, 52);
       textArray.push_back(text1);
-
-
 
       break; 
     }

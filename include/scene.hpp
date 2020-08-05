@@ -55,6 +55,10 @@ class Scene {
     // dark line on top
     sf::RectangleShape upperTabLine;
 
+    // for ignore/group tabs
+    int startTextX, startTextY; // starting position for texts in the tab
+    int space; // space between each lines
+
     /** Private helper functions **/
     bool modeChange(float x, float y);
 

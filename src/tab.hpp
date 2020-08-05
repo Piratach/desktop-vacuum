@@ -3,6 +3,7 @@
 #include "xmlhelper.hpp"
 #include <filesystem>
 #include <iostream>
+#include <fstream>
 
 enum TabMode {
   MANUAL,
@@ -23,7 +24,7 @@ class Tab {
     // this will get called from scene.cpp - more explicit this way
     // will also set xmlFilename variable in this function
     
-    // hardcoded for now...
+    // loads configuration from xml conf files
     int loadConfig(std::string xmlFilename, std::string monitorDir, sf::Font f,
         sf::Color defaultC, sf::Color button2Col);
 
@@ -33,12 +34,15 @@ class Tab {
     // checking the individual buttons in the vectors for updates
     void update(float x, float y);
 
-    // basically calls draw for all the buttons and texts
+    // calls draw for all the buttons and texts
     // the decision to draw or not will be decided in scene.cpp
     void draw(sf::RenderWindow &window);
 
-    // basically calls writeChanges for all the buttons 
+    // calls writeChanges for all the buttons 
     int writeChanges(void);
+
+    // ignoreLst mode function
+    int loadIgnoreLst(int x, int y, int space);
 
     /* Public variables */
     float left, right;
@@ -54,8 +58,9 @@ class Tab {
     sf::Font font;
 
     // array of circular buttons
-    // array of text lines
     std::vector<CircButton> circButtonArray;
+
+    // array of text
     std::vector<sf::Text> textArray;
 
     std::string xmlFilename;

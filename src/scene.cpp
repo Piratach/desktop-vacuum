@@ -104,6 +104,7 @@ bool Scene::modeChange(float x, float y) {
     return true;
   } else if (grpTab.checkPressed(x, y)) {
     mode = GROUPINGS;
+    grpTab.loadGroupings(startTextX, startTextY, space);
     tabLineL.setSize(sf::Vector2f(grpTab.left, 1));
     tabLineR.setSize(sf::Vector2f(width - grpTab.right, 1));
     tabLineR.setPosition(grpTab.right, tabHeight);

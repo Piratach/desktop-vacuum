@@ -41,6 +41,9 @@ class Tab {
     // calls writeChanges for all the buttons 
     int writeChanges(void);
 
+    // groupings mode function
+    int loadGroupings(int x, int y, int space);
+
     // ignoreLst mode function
     int loadIgnoreLst(int x, int y, int space);
 

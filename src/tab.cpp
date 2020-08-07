@@ -53,6 +53,37 @@ int Tab::writeChanges(void) {
   return 0;
 }
 
+/* For groupings tab ONLY */
+int Tab::loadGroupings(int x, int y, int space) {
+  std::string groupings = monitorDir + "/desktop-vacuum/res/groupings.txt";
+  textArray.clear();
+  std::ifstream infile;
+  infile.open(groupings);
+  if (!infile) {
+    std::cerr << "Error opening " << groupings;
+    return -1;
+  }
+
+  std::string displayedStr, ext, group;
+  while (infile >> ext >> group) {
+    displayedStr = ext + "     " + group;
+    sf::Text text(displayedStr, font, 16); // universal size is 16
+    text.setFillColor(sf::Color::White);
+    text.setPosition(x, y);
+    textArray.push_back(text);
+    y = y + space;
+  }
+
+  if (textArray.empty()) {
+    sf::Text text("Groupings is empty!", font, 16);
+    text.setPosition(x, y);
+    textArray.push_back(text);
+  }
+  infile.close();
+  return 0;
+}
+
+
 /* For ignoreLst tab ONLY */
 int Tab::loadIgnoreLst(int x, int y, int space) {
   std::string ignoreLst = monitorDir + "/desktop-vacuum/res/ignoreList.txt";

@@ -1,5 +1,7 @@
 # External Libraries Used
-
+  
+Please click on the link to install the required libraries.  
+  
 ## [SFML](https://www.sfml-dev.org/download.php)  
 Used for the interface  
   

@@ -9,4 +9,4 @@ Used for the interface
 Used to create and edit the config files  
   
 ## [whereami](https://github.com/gpakosz/whereami)
-Not currently used, but is planned to be used when packaging into a .app
+Used to allow users to be able to run the application from any directory

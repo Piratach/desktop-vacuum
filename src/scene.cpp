@@ -104,7 +104,7 @@ bool Scene::modeChange(float x, float y) {
     return true;
   } else if (grpTab.checkPressed(x, y)) {
     mode = GROUPINGS;
-    grpTab.loadGroupings(startTextX, startTextY, space);
+    grpTab.loadGroupings(startTextX, startTextX2, startTextY, space);
     tabLineL.setSize(sf::Vector2f(grpTab.left, 1));
     tabLineR.setSize(sf::Vector2f(width - grpTab.right, 1));
     tabLineR.setPosition(grpTab.right, tabHeight);
@@ -213,6 +213,9 @@ void Scene::loadConfig(std::string monitorPath, std::string resPath) {
 
   pElement = pRoot->FirstChildElement("startTextX");
   pElement->QueryIntText(&startTextX);
+
+  pElement = pRoot->FirstChildElement("startTextX2");
+  pElement->QueryIntText(&startTextX2);
 
   pElement = pRoot->FirstChildElement("startTextY");
   pElement->QueryIntText(&startTextY);

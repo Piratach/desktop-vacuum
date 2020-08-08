@@ -54,7 +54,7 @@ int Tab::writeChanges(void) {
 }
 
 /* For groupings tab ONLY */
-int Tab::loadGroupings(int x, int y, int space) {
+int Tab::loadGroupings(int x, int x2, int y, int space) {
   std::string groupings = monitorDir + "/desktop-vacuum/res/groupings.txt";
   textArray.clear();
   std::ifstream infile;
@@ -64,13 +64,17 @@ int Tab::loadGroupings(int x, int y, int space) {
     return -1;
   }
 
-  std::string displayedStr, ext, group;
+  std::string ext, group;
   while (infile >> ext >> group) {
-    displayedStr = ext + "     " + group;
-    sf::Text text(displayedStr, font, 16); // universal size is 16
-    text.setFillColor(sf::Color::White);
-    text.setPosition(x, y);
-    textArray.push_back(text);
+    sf::Text text1(ext, font, 16); // universal size is 16
+    text1.setFillColor(sf::Color::White);
+    text1.setPosition(x, y);
+    textArray.push_back(text1);
+
+    sf::Text text2(group, font, 16); // universal size is 16
+    text2.setFillColor(sf::Color::White);
+    text2.setPosition(x2, y);
+    textArray.push_back(text2);
     y = y + space;
   }
 

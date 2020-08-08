@@ -8,6 +8,7 @@
     <width2>284</width2>
     <height2>400</height2>
     <startTextX>25</startTextX>
+    <startTextX2>140</startTextX2>
     <startTextY>50</startTextY>
     <space>40</space>
     <bgColour r="38" g="45" b="58"/>

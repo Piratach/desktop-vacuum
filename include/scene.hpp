@@ -56,7 +56,9 @@ class Scene {
     sf::RectangleShape upperTabLine;
 
     // for ignore/group tabs
-    int startTextX, startTextY; // starting position for texts in the tab
+
+    // starting position for texts in the tab
+    int startTextX, startTextX2, startTextY; 
     int space; // space between each lines
 
     /** Private helper functions **/

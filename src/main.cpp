@@ -4,12 +4,11 @@
 #include "SFML-2.5.1-macos-clang/include/SFML/Graphics.hpp"
 #include "SFML-2.5.1-macos-clang/include/SFML/Window.hpp"
 #include "whereami/whereami.h"
-#include <csignal>
-#include <string>
 
-// temp includes
-#include <chrono>
-#include <thread>
+#include <csignal> // kill
+// #include <string> - don't think it is needed
+#include <thread> // for sleep operations after buttons are pressed
+#include <chrono> // not sure if needed or not
 
 /*****************************************************************************
  *
@@ -53,7 +52,7 @@ int main() {
   int height2 = interface.getHeight2();
 
   /* Window initialisation */
-  sf::RenderWindow window(sf::VideoMode(width, height), "Cleanup",
+  sf::RenderWindow window(sf::VideoMode(width, height), "Desktop-vacuum",
       sf::Style::Titlebar | sf::Style::Close);
   window.setVerticalSyncEnabled(true);
 
@@ -61,7 +60,6 @@ int main() {
   sf::View view2(sf::FloatRect(0.f, 0.f, width2, height2));
   sf::Vector2i pos;
   
-
   // [>* Cleaner *<]
 
   CleanupTools cleaner(monitorPath, resPath);
@@ -76,12 +74,18 @@ int main() {
     if (MANUALCLEAN && !isAutoActive) {
       interface.writeChanges();
       cleaner.manualCleanup();
-      // std::this_thread::sleep_for(std::chrono::milliseconds(400));
+
+      // to make sure it doesn't finish too quickly
+      std::this_thread::sleep_for(std::chrono::milliseconds(200));
+
       interface.finishManualC(MANUALCLEAN);
       EVENTPROCESSED = 1;
     } else if (REVERT && !isAutoActive) {
       cleaner.revert();
-      // std::this_thread::sleep_for(std::chrono::milliseconds(400));
+
+      // to make sure it doesn't finish too quickly
+      std::this_thread::sleep_for(std::chrono::milliseconds(200));
+
       interface.finishRevert(REVERT);
       EVENTPROCESSED = 1;
     } else if (AUTOCLEAN) {

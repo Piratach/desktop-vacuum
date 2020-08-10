@@ -57,7 +57,9 @@ void Directory::initMap(void) {
   std::string key, val;
   groupings.clear();
   while (infile >> key >> val) {
-    groupings[key] = DefaultString(val);
+    if (groupings.find(key) == groupings.end()) {
+      groupings[key] = DefaultString(val);
+    }
   }
   infile.close();
 }

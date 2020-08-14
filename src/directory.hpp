@@ -61,7 +61,7 @@ class Directory {
   private:
 
     /** Variables used in both modes **/
-    int mode; // manual or auto [not yet implemented]
+    int mode; // manual or auto 
     std::string mapFileName;
     std::string dirPath; // path of dir to monitor
     std::map<std::string, DefaultString> groupings;

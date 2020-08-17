@@ -10,4 +10,4 @@ The other files in the resources folder are:
   * "OpenSans-Light.tff" - the font used for the interface
   * "groupings.txt" - the text file users have to edit to change the groupings  
   * "ignoreList.txt" - the text file users have to edit to change the ignore list  
-  * ".save.txt" - the save file to be used for reverting operations
+  * ".save.txt" - a temporary save file to be used for reverting operations

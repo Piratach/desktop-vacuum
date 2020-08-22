@@ -1,9 +1,10 @@
 // #include <SFML/Graphics.hpp>
 #include "SFML-2.5.1-macos-clang/include/SFML/Graphics.hpp"
 
-// this class will be used directly in scene.cpp because the things it 
-// does are so important
-
+/* The RectButton class are rectangular buttons. In this programme, it will be
+ * used for the different cleanup functions. This is why the class will be used
+ * directly in scene.cpp.
+ */
 class RectButton {
   public:
 

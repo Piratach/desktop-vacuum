@@ -2,28 +2,41 @@
 #include "tinyxml2/tinyxml2.h"
 #include <cmath>
 
+/* The CircButton class is the commonly seen circular checkboxes used in 
+ * other interfaces. The user will be able to toggle between "yes", which is
+ * represented by a smaller, lighter circle inside the larger circle, and "no", 
+ * which is just the larger circle by itself.
+ */
 class CircButton {
   public:
 
-    // ctor
     CircButton(float x, float y, float inrad, float outrad,
         sf::Color inCol, sf::Color outCol, std::string name, bool on);
 
-    // seriously only checks whether it is pressed or not
+    /* Given coordinates, the function checks if it is within the range of the 
+     * button or not.
+     * Arguments: float x, float y, the coordinates of the click
+     * Returns: a boolean whether it has been clicked or not
+     */
     bool checkPressed(float x, float y);
 
-    // logic for changes in drawing here
+    /* Draws the appropriate objects to the window, depending on whether the 
+     * button has been pressed or not.
+     * Arguments: sf::RenderWindow &window, a ref of the window that will be 
+     *            drawn on
+     */
     void draw(sf::RenderWindow &window);
     
-    // write new preference/settings when window is closed
-    // make sure to check for changes to save computational power
+    /* If a previously unpressed button has been pressed and vice versa, 
+     * the function writes changes to the corresponding XML config file.
+     * Arguments: tinyxml2::XMLNode *pRoot, a pointer to the corresponding XML 
+     *            file
+     */
     void writeChanges(tinyxml2::XMLNode *pRoot);
 
   private:
 
-    // to identify the corresponding field in the xml file
-    // used for writes
-    std::string attrName; // 
+    std::string attrName; // crashes if I swap this to line 42 -- why?
     bool changed; // used to keep track of changes 
     bool pressed; // will be used to write changes at the end
 

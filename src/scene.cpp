@@ -1,6 +1,5 @@
 #include "scene.hpp"
 
-// ctor
 Scene::Scene()
   : manualTab(MANUAL)
   , autoTab(AUTO)
@@ -11,6 +10,8 @@ Scene::Scene()
   , autoButton()
 {}
 
+/* First draws the shapes and objects that are to be drawn in every tab, then 
+ * it draws all the currnet tab and that tab's objects */
 void Scene::redrawAll(sf::RenderWindow &window) {
 
   /* Lines common in all tabs */
@@ -74,6 +75,9 @@ sf::Color Scene::getBgColour(void) {
   return bgColour;
 }
 
+/* The following functions just simply resets the flag used in main.cpp and 
+ * calls the corresponding button's finish function */
+
 void Scene::finishManualC(int &MANUALCLEAN) {
   MANUALCLEAN = 0;
   manualButton.finish();
@@ -89,6 +93,8 @@ void Scene::finishAutoC(int &AUTOCLEAN) {
   autoButton.finish();
 }
 
+/* Checks for tab changes (user presses a different tab) and updates the lines 
+ * displayed beneath the tab name */
 bool Scene::modeChange(float x, float y) {
   if (manualTab.checkPressed(x, y)) {
     mode = MANUAL;
@@ -120,11 +126,12 @@ bool Scene::modeChange(float x, float y) {
   return false;
 }
 
+/* Takes advantage of the fact that only one event can be processed at a time. 
+ * Processes all the possible events occurring. If one event happened, break */
 void Scene::updateAll(float x, float y, int &MANUALCLEAN, int &REVERT, 
     int &AUTOCLEAN, int isAutoActive, int &MODECHANGED)  {
   // assert(MANUALCLEAN == 0) && assert(REVERT == 0) && assert(AUTOCLEAN == 0);
 
-  // take into account button presses
   if (!modeChange(x, y)) {
     switch(mode) {
       case MANUAL: {

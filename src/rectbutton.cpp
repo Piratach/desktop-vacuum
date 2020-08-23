@@ -1,8 +1,8 @@
 #include "rectbutton.hpp"
 #include <iostream>
 
-
-/* to be redefined later */
+/* Initial values are assigned. This is so that we are able to initialise the
+ * different buttons in Scene's constructor */
 RectButton::RectButton() {
   topLeftX = 0;
   topLeftY = 0;
@@ -16,6 +16,7 @@ RectButton::RectButton() {
   textSize = 0;
 }
 
+/* CURRENTLY UNUSED */
 RectButton::RectButton(float x, float y, float w, float h, sf::Color fillCol,
         sf::Color outlineCol, std::string idletext, std::string runtext,
         sf::Font f, float textsize) {
@@ -33,6 +34,8 @@ RectButton::RectButton(float x, float y, float w, float h, sf::Color fillCol,
   init();
 }
 
+/* Assigns the button's class variables to the right values. To be called in 
+ * Scene's loadConfig */
 void RectButton::setAttr(float x, float y, float w, float h, sf::Color fillCol,
         sf::Color outlineCol, std::string idletext, std::string runtext,
         sf::Font f, float textsize) {
@@ -54,14 +57,12 @@ bool RectButton::checkPressed(float x, float y) {
   if (topLeftX <= x && x <= topLeftX + width && 
       topLeftY <= y && y <= topLeftY + height) {
     pressed = true;
-    rect.setOutlineColor(sf::Color(174, 191, 235));
+    rect.setOutlineColor(sf::Color(174, 191, 235)); // hardcoded colour
     return true;
   }
   return false;
 }
 
-// to be called once during the switch/case handling
-// and once in the usual drawing section....
 void RectButton::draw(sf::RenderWindow &window) {
   window.draw(rect);
   if (pressed) {
@@ -71,6 +72,8 @@ void RectButton::draw(sf::RenderWindow &window) {
   }
 }
 
+/* Setting pressed to false will make RectButton::draw draw the idleText next 
+ * time it is called */
 void RectButton::finish(void) {
   rect.setOutlineColor(sf::Color(36, 50, 84));
   rect.setOutlineColor(borderCol);

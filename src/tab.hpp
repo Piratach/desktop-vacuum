@@ -12,10 +12,9 @@ enum TabMode {
   IGNORELST
 };
 
-// Tab functions like a button but is not actually one...
-// Tab class will deal with all the tab switching completely EXCEPT for 
-// the left and right horizontal lines governing the tabs
-// That will be done externally in scene.cpp
+/* Tab functions like a button but is not actually one. The Tab class will deal 
+ * with all the tab switching completely EXCEPT for the tab lines below the 
+ * tab names. That will be done externally in scene.cpp */
 class Tab {
   public:
 

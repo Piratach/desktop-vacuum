@@ -17,14 +17,32 @@
 #include "directory.hpp"
 #include "xmlhelper.hpp"
 
+/* CleanupTools processes all the different cleanup functions and revert
+ * functions. It will be connected with the interface (Scene) within main.cpp.
+ */
 class CleanupTools {
 
   public:
 
+    /* dirName - absolute path to the directory that is to be monitored.
+     * resName - absolute path to the resource directory ("/res/") */
     CleanupTools (std::string dirName, std::string resName);
 
+    /* Performs a manual cleanup of the directory that is to be monitored. 
+     * Returns: 0, upon completion.
+     *          -1, if an error has been encountered. */
     int manualCleanup(void);
+
+    /* Reverts the previous manual cleanup of the directory. Nothing happens if 
+     * manual cleanup was not called. 
+     * Returns: 0, upon completion.
+     *          -1, if an error has been encountered. */
     int revert(void);
+
+    /* Begins auto-cleaning new files. Listens to changes in the directory and 
+     * performs cleaning accordingly.
+     * Returns: 0, upon completion.
+     *          -1, if an error has been encountered. */
     int autoCleanup(void);
 
   private:

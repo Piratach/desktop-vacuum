@@ -13,7 +13,7 @@ CleanupTools::CleanupTools (std::string dirName, std::string resName)
   resPath = resName;
 };
 
-/* for now, sort by file extension */
+/* For now, sort by file extension */
 int CleanupTools::manualCleanup() {
 
   std::cout << "Manual Cleanup" << std::endl;
@@ -125,7 +125,8 @@ int CleanupTools::autoCleanup() {
 
 /**************************** Private Functions *******************************/
 
-// Getting info of a button in the tab 
+/* Looks into the corresponding config file to get the user desired settings 
+ * before running the programme */
 bool CleanupTools::getConfig(std::string fileName, std::string buttonName) {
   bool res;
   tinyxml2::XMLElement *pElement;

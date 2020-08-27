@@ -170,6 +170,8 @@ void Scene::updateAll(float x, float y, int &MANUALCLEAN, int &REVERT,
   }
 }
 
+/* Initialises and loads configurations from sceneConfig.xml, by using 
+ * tinyxml2 */
 void Scene::loadConfig(std::string monitorPath, std::string resPath) {
 
   /* Things needed for Tab.loadConfig */
@@ -333,6 +335,7 @@ void Scene::loadConfig(std::string monitorPath, std::string resPath) {
   tabNameArray.push_back(ignoreText);
 }
 
+/* Write changes made to each tab's respective config file */
 int Scene::writeChanges(void) {
   manualTab.writeChanges();
   autoTab.writeChanges();

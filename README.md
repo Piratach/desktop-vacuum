@@ -11,7 +11,7 @@
 desktop-vacuum is intended to help keep your computer's desktop clean. Its 
 functionality allows it to be used for other folders as well. Using user-defined 
 groupings, the programme sorts files into their respective groupings based on 
-the file's extension.  
+the file's extension. Currently only works for unix systems. 
 
 ## Functionality   
 There are two main modes in the programme.  
